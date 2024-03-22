@@ -19,11 +19,18 @@ export class GlProgram {
     return this._gl;
   }
 
-  public get isLinked(): boolean {
+  public get isLinked(): GLboolean {
     const gl = this._gl;
     const glProgram = this._glProgram;
 
     return gl.getProgramParameter(glProgram, gl.LINK_STATUS);
+  }
+
+  public get isDeleted(): GLboolean {
+    const gl = this._gl;
+    const glProgram = this._glProgram;
+
+    return gl.getProgramParameter(glProgram, gl.DELETE_STATUS);
   }
 
   public get glProgramInfoLog() {
@@ -51,6 +58,13 @@ export class GlProgram {
     const glProgram = this._glProgram;
 
     gl.useProgram(glProgram);
+  }
+
+  public destroy() {
+    const gl = this._gl;
+    const glProgram = this._glProgram;
+
+    gl.deleteProgram(glProgram);
   }
 
   public getAttributeLocation(attributeName: string) {

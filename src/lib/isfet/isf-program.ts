@@ -21,12 +21,18 @@ export class IsfProgram extends GlProgram {
 
   public static createFromIsfSource(gl: WebGLRenderingContext, isfSource: string) {
     const isfFragmentShaderSource = `${isfFragmentShaderSourceHeader}\n\n${isfSource}`;
-
     const isfProgram = new IsfProgram(gl);
     const vertexShader = GlShader.createFromSource(gl, gl.VERTEX_SHADER, isfVertexShaderSource);
     const fragmentShader = GlShader.createFromSource(gl, gl.FRAGMENT_SHADER, isfFragmentShaderSource);
 
-    isfProgram.link(vertexShader, fragmentShader);
+    try {
+      isfProgram.link(vertexShader, fragmentShader);
+    } catch (e) {
+      isfProgram.destroy();
+      vertexShader.destroy();
+      fragmentShader.destroy();
+      throw e;
+    }
 
     return isfProgram;
   }

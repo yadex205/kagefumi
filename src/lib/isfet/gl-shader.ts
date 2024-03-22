@@ -8,9 +8,16 @@ export class GlShader {
 
   public static createFromSource(gl: WebGLRenderingContext, glShaderType: GLenum, source: string) {
     const glShader = new GlShader(gl, glShaderType);
-    glShader.compile(source);
 
-    return glShader;
+    try {
+      glShader.compile(source);
+
+      return glShader;
+    } catch (e) {
+      glShader.destroy();
+
+      throw e;
+    }
   }
 
   public constructor(gl: WebGLRenderingContext, glShaderType: GLenum) {
@@ -39,11 +46,18 @@ export class GlShader {
     return this._glShader;
   }
 
-  public get isCompiled(): boolean {
+  public get isCompiled(): GLboolean {
     const gl = this._gl;
     const glShader = this._glShader;
 
     return gl.getShaderParameter(glShader, gl.COMPILE_STATUS);
+  }
+
+  public get isDeleted(): GLboolean {
+    const gl = this._gl;
+    const glShader = this._glShader;
+
+    return gl.getShaderParameter(glShader, gl.DELETE_STATUS);
   }
 
   public get glShaderInfoLog() {
@@ -64,5 +78,12 @@ export class GlShader {
     if (!this.isCompiled) {
       throw new GlShaderCompileError(this.typeName, this.glShaderInfoLog);
     }
+  }
+
+  public destroy() {
+    const gl = this._gl;
+    const glShader = this._glShader;
+
+    gl.deleteShader(glShader);
   }
 }
