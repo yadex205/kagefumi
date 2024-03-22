@@ -5,6 +5,23 @@ import { createRef, ref, Ref } from "lit/directives/ref.js";
 import { Isfet } from "../lib/isfet";
 
 const basicIsfSource = `
+/*{
+  "DESCRIPTION": "Minimum ISF shader.",
+  "CREDIT": "Kanon Kakuno",
+  "CATEGORY": [
+    "GENERATOR"
+  ],
+  "INPUTS": [
+    {
+      "NAME": "value1",
+      "TYPE": "float",
+      "DEFAULT": 0.5,
+      "MIN": 0.0,
+      "MAX": 1.0
+    }
+  ]
+}*/
+
 void main() {
   gl_FragColor = vec4(0.6, 0.6, 0.6, 1.0);
 }
