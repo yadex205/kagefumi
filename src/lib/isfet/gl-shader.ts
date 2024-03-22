@@ -1,3 +1,6 @@
+import { GlShaderCompileError } from "./gl-shader-compile-error";
+import { GlShaderInfoLog } from "./gl-shader-info-log";
+
 export class GlShader {
   private _gl: WebGLRenderingContext;
   private _glShaderType: GLenum;
@@ -47,7 +50,7 @@ export class GlShader {
     const gl = this._gl;
     const glShader = this._glShader;
 
-    return gl.getShaderInfoLog(glShader);
+    return GlShaderInfoLog.parse(gl.getShaderInfoLog(glShader) ?? "");
   }
 
   public compile(shaderSource: string) {
@@ -59,7 +62,7 @@ export class GlShader {
     gl.compileShader(glShader);
 
     if (!this.isCompiled) {
-      throw new Error(`Failed to compile ${this.typeName} shader.\n${this.glShaderInfoLog}`);
+      throw new GlShaderCompileError(this.typeName, this.glShaderInfoLog);
     }
   }
 }
