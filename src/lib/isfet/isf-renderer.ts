@@ -4,7 +4,7 @@ import { IsfProgram } from "./isf-program";
 export class IsfRenderer {
   private _gl: WebGLRenderingContext;
   private _vertexPositionBuffer: GlVertexBuffer;
-  private _isfProgram: IsfProgram;
+  private _isfProgram?: IsfProgram;
 
   public constructor(gl: WebGLRenderingContext) {
     const vertexPositionBuffer = new GlVertexBuffer(gl, gl.STATIC_DRAW, 2, gl.FLOAT);
@@ -17,9 +17,14 @@ export class IsfRenderer {
   public useIsfProgram(isfProgram: IsfProgram) {
     const gl = this._gl;
     const vertexPositionBuffer = this._vertexPositionBuffer;
+    const positionAttributeLocation = isfProgram.positionAttributeLocation;
 
-    gl.enableVertexAttribArray(isfProgram.positionAttributeLocation);
-    vertexPositionBuffer.bindToAttributeLocation(isfProgram.positionAttributeLocation);
+    if (positionAttributeLocation === null) {
+      throw new Error("Cannot get position attribute location.");
+    }
+
+    gl.enableVertexAttribArray(positionAttributeLocation);
+    vertexPositionBuffer.bindToAttributeLocation(positionAttributeLocation);
 
     isfProgram.use();
 
@@ -37,6 +42,10 @@ export class IsfRenderer {
   public draw(time: number, renderSizeWidth: number, renderSizeHeight: number) {
     const gl = this._gl;
     const isfProgram = this._isfProgram;
+
+    if (!isfProgram) {
+      throw new Error("ISF program is not set.");
+    }
 
     gl.uniform1f(isfProgram.timeUniformLocation, time);
     gl.uniform2f(isfProgram.renderSizeUniformLocation, renderSizeWidth, renderSizeHeight);

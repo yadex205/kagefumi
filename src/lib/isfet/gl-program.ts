@@ -7,6 +7,10 @@ export class GlProgram {
   public constructor(gl: WebGLRenderingContext) {
     const glProgram = gl.createProgram();
 
+    if (!glProgram) {
+      throw new Error("Cannot create WebGL program.");
+    }
+
     this._gl = gl;
     this._glProgram = glProgram;
   }
@@ -36,6 +40,10 @@ export class GlProgram {
     gl.attachShader(glProgram, vertexShader.glShader);
     gl.attachShader(glProgram, fragmentShader.glShader);
     gl.linkProgram(glProgram);
+
+    if (!this.isLinked) {
+      throw new Error(`Cannot link WebGL program.\n${this.glProgramInfoLog}`);
+    }
   }
 
   public use() {

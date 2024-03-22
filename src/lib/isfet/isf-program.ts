@@ -3,9 +3,9 @@ import { IsfVertexShader } from "./isf-vertex-shader";
 import { IsfFragmentShader } from "./isf-fragment-shader";
 
 export class IsfProgram extends GlProgram {
-  private _positionAttributeLocation: GLint;
-  private _timeUniformLocation: WebGLUniformLocation;
-  private _renderSizeUniformLocation: WebGLUniformLocation;
+  private _positionAttributeLocation: GLint | null = null;
+  private _timeUniformLocation: WebGLUniformLocation | null = null;
+  private _renderSizeUniformLocation: WebGLUniformLocation | null = null;
 
   public override link(isfVertexShader: IsfVertexShader, isfFragmentShader: IsfFragmentShader) {
     super.link(isfVertexShader, isfFragmentShader);

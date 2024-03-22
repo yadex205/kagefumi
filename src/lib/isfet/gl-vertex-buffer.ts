@@ -8,6 +8,10 @@ export class GlVertexBuffer {
   public constructor(gl: WebGLRenderingContext, usage: GLenum, attributeSize: GLint, dataType: GLenum) {
     const glBuffer = gl.createBuffer();
 
+    if (!glBuffer) {
+      throw new Error("Cannot create WebGL buffer.");
+    }
+
     this._gl = gl;
     this._glBuffer = glBuffer;
     this._usage = usage;
