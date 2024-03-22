@@ -8,6 +8,7 @@ const basicIsfSource = `
 /*{
   "DESCRIPTION": "Minimum ISF shader.",
   "CREDIT": "Kanon Kakuno",
+  "ISFVSN": "2.0",
   "CATEGORY": [
     "GENERATOR"
   ],
