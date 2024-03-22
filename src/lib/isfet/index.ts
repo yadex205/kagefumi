@@ -1,5 +1,3 @@
-import { IsfVertexShader } from "./isf-vertex-shader";
-import { IsfFragmentShader } from "./isf-fragment-shader";
 import { IsfProgram } from "./isf-program";
 import { IsfRenderer } from "./isf-renderer";
 
@@ -20,13 +18,7 @@ export class Isfet {
   public createIsfProgram(name: string, isfSource: string) {
     const gl = this._gl;
 
-    const isfVertexShader = new IsfVertexShader(gl);
-    const isfFragmentShader = new IsfFragmentShader(gl);
-    const isfProgram = new IsfProgram(gl);
-
-    isfVertexShader.compile();
-    isfFragmentShader.compile(isfSource);
-    isfProgram.link(isfVertexShader, isfFragmentShader);
+    const isfProgram = IsfProgram.createFromIsfSource(gl, isfSource);
 
     this._isfPrograms.set(name, isfProgram);
   }

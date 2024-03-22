@@ -3,6 +3,13 @@ export class GlShader {
   private _glShaderType: GLenum;
   private _glShader: WebGLShader;
 
+  public static createFromSource(gl: WebGLRenderingContext, glShaderType: GLenum, source: string) {
+    const glShader = new GlShader(gl, glShaderType);
+    glShader.compile(source);
+
+    return glShader;
+  }
+
   public constructor(gl: WebGLRenderingContext, glShaderType: GLenum) {
     const glShader = gl.createShader(glShaderType);
 
