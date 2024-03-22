@@ -2,6 +2,7 @@
   "name": "isfet",
   "version": "0.0.1",
   "description": "ISF shader develop environment",
+  "private": true,
   "type": "module",
   "repository": {
     "type": "git",
@@ -14,11 +15,15 @@
   },
   "homepage": "https://github.com/yadex205/isfet#readme",
   "scripts": {
-    "build": "node ./scripts/build.js",
-    "start": "browser-sync start --server 'build' --watch --no-ui --no-notify --no-ghost-mode"
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "lit": "^3.1.2"
   },
   "devDependencies": {
-    "browser-sync": "^3.0.2",
-    "esbuild": "0.20.2"
+    "typescript": "^5.2.2",
+    "vite": "^5.2.0"
   }
 }
