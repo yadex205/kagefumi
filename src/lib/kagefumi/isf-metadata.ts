@@ -11,8 +11,10 @@ const Vector4Schema = yup.tuple([
 const IsfMetadataJsonBaseInputSchema = yup.object({
   NAME: yup.string().required().matches(/^\S+$/),
   LABEL: yup.string().optional(),
-  TYPE: yup.string().required().oneOf(["bool", "long", "float", "color", "image"]),
+  TYPE: yup.string().required().oneOf(["event", "bool", "long", "float", "color", "image"]),
 });
+
+type IsfMetadataJsonEventInput = Omit<yup.InferType<typeof IsfMetadataJsonBaseInputSchema>, "TYPE"> & { TYPE: "event" };
 
 const IsfMetadataJsonBoolInputSchema = IsfMetadataJsonBaseInputSchema.concat(yup.object({
   DEFAULT: yup.number().optional(),
@@ -44,10 +46,11 @@ const IsfMetadataJsonColorInputSchema = IsfMetadataJsonBaseInputSchema.concat(yu
 
 type IsfMetadataJsonColorInput = Omit<yup.InferType<typeof IsfMetadataJsonColorInputSchema>, "TYPE"> & { TYPE: "color" };
 
-type IsfMetadataJsonImageInput = Omit<yup.InferType<typeof IsfMetadataJsonColorInputSchema>, "TYPE"> & { TYPE: "image" };
+type IsfMetadataJsonImageInput = Omit<yup.InferType<typeof IsfMetadataJsonBaseInputSchema>, "TYPE"> & { TYPE: "image" };
 
 const IsfMetadataJsonInputSchema = yup.lazy(value => {
   switch (value?.TYPE) {
+    case "event": return IsfMetadataJsonBaseInputSchema;
     case "bool": return IsfMetadataJsonBoolInputSchema;
     case "long": return IsfMetadataJsonLongInputSchema;
     case "float": return IsfMetadataJsonFloatInputSchema;
@@ -68,6 +71,7 @@ const IsfMetadataJsonSchema = yup.object({
 
 type IsfMetadataJson = Omit<yup.InferType<typeof IsfMetadataJsonSchema>, "INPUTS"> & {
   INPUTS?: (
+    | IsfMetadataJsonEventInput
     | IsfMetadataJsonBoolInput
     | IsfMetadataJsonLongInput
     | IsfMetadataJsonFloatInput
@@ -80,6 +84,10 @@ interface IsfBaseInput {
   name: string;
   label?: string;
   type: string;
+}
+
+interface IsfEventInput extends IsfBaseInput {
+  type: "event";
 }
 
 interface IsfBoolInput extends IsfBaseInput {
@@ -113,6 +121,7 @@ interface IsfImageInput extends IsfBaseInput {
 }
 
 type IsfInput =
+  | IsfEventInput
   | IsfBoolInput
   | IsfLongInput
   | IsfFloatInput
@@ -182,6 +191,12 @@ export class IsfMetadata {
 
     this._inputs = (isfMetadataJson.INPUTS || []).map(rawInput => {
       switch (rawInput.TYPE) {
+        case "event": return {
+          name: rawInput.NAME,
+          label: rawInput.LABEL,
+          type: rawInput.TYPE,
+        }
+
         case "bool": return {
           name: rawInput.NAME,
           label: rawInput.LABEL,

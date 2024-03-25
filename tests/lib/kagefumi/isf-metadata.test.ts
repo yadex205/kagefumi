@@ -103,6 +103,18 @@ describe("IsfMetadata", () => {
   });
 
   describe(".parseIsfSource", () => {
+    describe("when test-event.fs is given", async () => {
+      const isfSource = await readFile(path.join(import.meta.dirname, "../../vendor/isf-tests-tutorials/test-event.fs"), "utf-8");
+      const isfMetadata = IsfMetadata.parseIsfSource(isfSource)!;
+
+      it("adds inputs", () => {
+        expect(isfMetadata.inputs).toMatchObject([
+          { type: "image", name: "inputImage" },
+          { type: "event", name: "flashEvent" },
+        ]);
+      });
+    });
+
     describe("when test-bool.fs is given", async () => {
       const isfSource = await readFile(path.join(import.meta.dirname, "../../vendor/isf-tests-tutorials/test-bool.fs"), "utf-8");
       const isfMetadata = IsfMetadata.parseIsfSource(isfSource)!;
