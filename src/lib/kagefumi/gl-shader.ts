@@ -24,7 +24,7 @@ export class GlShader {
     const glShader = gl.createShader(glShaderType);
 
     if (!glShader) {
-      throw new Error("Cannot create WebGL shader");
+      throw new Error("Cannot create WebGL shader.");
     }
 
     this._gl = gl;

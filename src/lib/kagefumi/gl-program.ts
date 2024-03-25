@@ -1,7 +1,7 @@
 import { GlShader } from "./gl-shader";
 
 export class GlProgram {
-  private _gl: WebGLRenderingContext;
+  protected _gl: WebGLRenderingContext;
   private _glProgram: WebGLProgram;
 
   public constructor(gl: WebGLRenderingContext) {
@@ -13,10 +13,6 @@ export class GlProgram {
 
     this._gl = gl;
     this._glProgram = glProgram;
-  }
-
-  protected get gl() {
-    return this._gl;
   }
 
   public get isLinked(): GLboolean {

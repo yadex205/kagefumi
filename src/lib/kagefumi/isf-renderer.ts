@@ -1,10 +1,21 @@
 import { GlVertexBuffer } from "./gl-vertex-buffer";
 import { IsfProgram } from "./isf-program";
 
+type UniformSetVectorFunctionName =
+  | "uniform1fv"
+  | "uniform1iv"
+  | "uniform2fv"
+  | "uniform2iv"
+  | "uniform3fv"
+  | "uniform3iv"
+  | "uniform4fv"
+  | "uniform4iv";
+
 export class IsfRenderer {
   private _gl: WebGLRenderingContext;
   private _vertexPositionBuffer: GlVertexBuffer;
   private _isfProgram?: IsfProgram;
+  private _uniformSetFunctionNames: { [inputName: string]: UniformSetVectorFunctionName } = {};
 
   public constructor(gl: WebGLRenderingContext) {
     const vertexPositionBuffer = new GlVertexBuffer(gl, gl.STATIC_DRAW, 2, gl.FLOAT);
@@ -17,14 +28,23 @@ export class IsfRenderer {
   public useIsfProgram(isfProgram: IsfProgram) {
     const gl = this._gl;
     const vertexPositionBuffer = this._vertexPositionBuffer;
-    const positionAttributeLocation = isfProgram.positionAttributeLocation;
+    const positionAttributeLocation = isfProgram.attributeLocations["position"];
 
     if (positionAttributeLocation === null) {
-      throw new Error("Cannot get position attribute location.");
+      throw new Error("Cannot find position attribute.");
     }
 
     gl.enableVertexAttribArray(positionAttributeLocation);
     vertexPositionBuffer.bindToAttributeLocation(positionAttributeLocation);
+
+    isfProgram.isfMetadata.inputs.forEach(input => {
+      switch (input.type) {
+        case "bool": return this._uniformSetFunctionNames[input.name] = "uniform1iv";
+        case "long": return this._uniformSetFunctionNames[input.name] = "uniform1iv";
+        case "float": return this._uniformSetFunctionNames[input.name] = "uniform1fv";
+        case "color": return this._uniformSetFunctionNames[input.name] = "uniform4fv";
+      }
+    });
 
     isfProgram.use();
 
@@ -39,16 +59,24 @@ export class IsfRenderer {
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
   }
 
-  public draw(time: number, renderSizeWidth: number, renderSizeHeight: number) {
+  public setInputValue(name: string, value: number[]) {
     const gl = this._gl;
-    const isfProgram = this._isfProgram;
+    const uniformLocation = this._isfProgram!.uniformLocations[name];
+    const uniformSetVectorFunctionName = this._uniformSetFunctionNames[name];
 
-    if (!isfProgram) {
-      throw new Error("ISF program is not set.");
+    if (!uniformSetVectorFunctionName) {
+      return;
     }
 
-    gl.uniform1f(isfProgram.timeUniformLocation, time);
-    gl.uniform2f(isfProgram.renderSizeUniformLocation, renderSizeWidth, renderSizeHeight);
+    gl[uniformSetVectorFunctionName](uniformLocation, value);
+  }
+
+  public draw(time: number, renderSizeWidth: number, renderSizeHeight: number) {
+    const gl = this._gl;
+    const isfProgram = this._isfProgram!;
+
+    gl.uniform1f(isfProgram.uniformLocations["TIME"], time);
+    gl.uniform2f(isfProgram.uniformLocations["RENDERSIZE"], renderSizeWidth, renderSizeHeight);
 
     gl.drawArrays(gl.TRIANGLE_FAN, 0, 4);
     gl.flush();

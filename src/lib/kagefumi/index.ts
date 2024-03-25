@@ -34,6 +34,10 @@ export class Kagefumi {
     isfRenderer.useIsfProgram(isfProgram);
   }
 
+  public setInputValue(name: string, value: number[]) {
+    this._isfRenderer.setInputValue(name, value);
+  }
+
   public start() {
     const interval = 1000 / 60;
 

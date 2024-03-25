@@ -160,22 +160,20 @@ export class IsfMetadata {
   private _inputs: IsfInput[] = [];
 
   public static parseIsfSource(isfSource: string) {
+    const isfMetadata = new IsfMetadata();
+
     for (const token of tokenizeGlsl(isfSource)) {
       if (token.type === "whitespace") {
         continue;
       } else if (token.type === "block-comment") {
         const isfMetadataJson = JSON.parse(token.data.replace(/(^\/\*|\*\/$)/g, ""));
-        const isfMetadata = new IsfMetadata();
-
         isfMetadata.parseIsfMetadataJson(isfMetadataJson);
-
-        return isfMetadata;
       } else {
-        return null;
+        break;
       }
     }
 
-    return null;
+    return isfMetadata;
   }
 
   public get isfVersion() {
