@@ -113,6 +113,18 @@ describe("IsfMetadata", () => {
           { type: "bool", name: "flashToggle", default: 1.0 }
         ])
       });
-    })
+    });
+
+    describe("when test-long.fs is given", async () => {
+      const isfSource = await readFile(path.join(import.meta.dirname, "../../vendor/isf-tests-tutorials/test-long.fs"), "utf-8");
+      const isfMetadata = IsfMetadata.parseIsfSource(isfSource)!;
+
+      it("adds inputs", () => {
+        expect(isfMetadata.inputs).toMatchObject([
+          { type: "image", name: "inputImage" },
+          { type: "long", name: "longInputIsPopUpButton", values: [0, 1, 2], labels: ["red", "green", "blue"], default: 1 },
+        ])
+      });
+    });
   });
 });

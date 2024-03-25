@@ -22,8 +22,8 @@ type IsfMetadataJsonBoolInput = Omit<yup.InferType<typeof IsfMetadataJsonBoolInp
 
 const IsfMetadataJsonLongInputSchema = IsfMetadataJsonBaseInputSchema.concat(yup.object({
   DEFAULT: yup.number().optional(),
-  MIN: yup.number().optional(),
-  MAX: yup.number().optional(),
+  VALUES: yup.array().of(yup.number().required()).optional(),
+  LABELS: yup.array().of(yup.string().required()).optional(),
 }));
 
 type IsfMetadataJsonLongInput = Omit<yup.InferType<typeof IsfMetadataJsonLongInputSchema>, "TYPE"> & { TYPE: "long" };
@@ -90,8 +90,8 @@ interface IsfBoolInput extends IsfBaseInput {
 interface IsfLongInput extends IsfBaseInput {
   type: "long";
   default?: number;
-  min?: number;
-  max?: number;
+  values?: number[];
+  labels?: string[];
 }
 
 interface IsfFloatInput extends IsfBaseInput {
@@ -194,8 +194,8 @@ export class IsfMetadata {
           label: rawInput.LABEL,
           type: rawInput.TYPE,
           default: rawInput.DEFAULT,
-          min: rawInput.MIN,
-          max: rawInput.MAX,
+          values: rawInput.VALUES,
+          labels: rawInput.LABELS,
         };
 
         case "float": return {
