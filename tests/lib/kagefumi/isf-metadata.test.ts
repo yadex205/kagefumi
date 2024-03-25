@@ -1,3 +1,5 @@
+import { readFile } from "node:fs/promises";
+import * as path from "node:path";
 import { describe, expect, it } from "vitest";
 import { IsfMetadata } from "../../../src/lib/kagefumi/isf-metadata";
 
@@ -98,5 +100,19 @@ describe("IsfMetadata", () => {
         expect(() => isfMetadata.parseIsfMetadataJson({ INPUTS: [{ NAME: "value1" }] })).toThrowError();
       });
     });
+  });
+
+  describe(".parseIsfSource", () => {
+    describe("when test-bool.fs is given", async () => {
+      const isfSource = await readFile(path.join(import.meta.dirname, "../../vendor/isf-tests-tutorials/test-bool.fs"), "utf-8");
+      const isfMetadata = IsfMetadata.parseIsfSource(isfSource)!;
+
+      it("adds inputs", () => {
+        expect(isfMetadata.inputs).toMatchObject([
+          { type: "image", name: "inputImage" },
+          { type: "bool", name: "flashToggle", default: 1.0 }
+        ])
+      });
+    })
   });
 });

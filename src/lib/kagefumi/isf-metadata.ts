@@ -170,8 +170,9 @@ export class IsfMetadata {
     return this._inputs;
   }
 
-  public parseIsfMetadataJson(isfMetadataJson: IsfMetadataJson) {
-    IsfMetadataJsonSchema.validateSync(isfMetadataJson);
+  public parseIsfMetadataJson(_isfMetadataJson: unknown) {
+    IsfMetadataJsonSchema.validateSync(_isfMetadataJson);
+    const isfMetadataJson = _isfMetadataJson as IsfMetadataJson;
 
     this._isfVersion = isfMetadataJson.ISFVSN;
     this._version = isfMetadataJson.VSN;
