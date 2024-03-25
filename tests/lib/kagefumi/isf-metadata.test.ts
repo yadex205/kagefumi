@@ -110,8 +110,8 @@ describe("IsfMetadata", () => {
       it("adds inputs", () => {
         expect(isfMetadata.inputs).toMatchObject([
           { type: "image", name: "inputImage" },
-          { type: "bool", name: "flashToggle", default: 1.0 }
-        ])
+          { type: "bool", name: "flashToggle", default: 1.0 },
+        ]);
       });
     });
 
@@ -123,7 +123,33 @@ describe("IsfMetadata", () => {
         expect(isfMetadata.inputs).toMatchObject([
           { type: "image", name: "inputImage" },
           { type: "long", name: "longInputIsPopUpButton", values: [0, 1, 2], labels: ["red", "green", "blue"], default: 1 },
-        ])
+        ]);
+      });
+    });
+
+    describe("when test-float.fs is given", async () => {
+      const isfSource = await readFile(path.join(import.meta.dirname, "../../vendor/isf-tests-tutorials/test-float.fs"), "utf-8");
+      const isfMetadata = IsfMetadata.parseIsfSource(isfSource)!;
+
+      it("adds inputs", () => {
+        expect(isfMetadata.inputs).toMatchObject([
+          { type: "image", name: "inputImage" },
+          { type: "float", name: "level", default: 0.5, min: 0.0, max: 1.0 },
+        ]);
+      });
+    });
+
+    describe("when test-color.fs is given", async () => {
+      const isfSource = await readFile(path.join(import.meta.dirname, "../../vendor/isf-tests-tutorials/test-color.fs"), "utf-8");
+      const isfMetadata = IsfMetadata.parseIsfSource(isfSource)!;
+
+      it("adds inputs", () => {
+        expect(isfMetadata.inputs).toMatchObject([
+          { type: "image", name: "inputImage" },
+          { type: "float", name: "level", default: 0.5, min: 0.0, max: 1.0 },
+          { type: "color", name: "lowColor", default: [0.0, 0.0, 1.0, 1.0] },
+          { type: "color", name: "highColor", default: [1.0, 1.0, 1.0, 1.0] },
+        ]);
       });
     });
   });
