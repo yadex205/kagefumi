@@ -1,7 +1,7 @@
 import { IsfProgram } from "./isf-program";
 import { IsfRenderer } from "./isf-renderer";
 
-export class Isfet {
+export class Kagefumi {
   private _gl: WebGLRenderingContext;
   private _isfPrograms: Map<string, IsfProgram> = new Map();
   private _isfRenderer: IsfRenderer;

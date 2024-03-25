@@ -2,7 +2,7 @@ import { LitElement, css, html } from "lit";
 import { customElement } from "lit/decorators.js";
 import { createRef, ref, Ref } from "lit/directives/ref.js";
 
-import { Isfet } from "../lib/isfet";
+import { Kagefumi } from "../lib/kagefumi";
 
 const basicIsfSource = `
 /*{
@@ -28,8 +28,8 @@ void main() {
 }
 `.trim();
 
-@customElement("isfet-canvas")
-export class IsfetCanvas extends LitElement {
+@customElement("kagefumi-canvas")
+export class KagefumiCanvas extends LitElement {
   private _canvasElRef: Ref<HTMLCanvasElement> = createRef();
 
   static styles = css`
@@ -58,16 +58,16 @@ export class IsfetCanvas extends LitElement {
       throw new Error("Cannot get WebGL context.");
     }
 
-    const isfet = new Isfet(glContext);
-    isfet.createIsfProgram("basic", basicIsfSource);
-    isfet.useIsfProgram("basic");
+    const kagefumi = new Kagefumi(glContext);
+    kagefumi.createIsfProgram("basic", basicIsfSource);
+    kagefumi.useIsfProgram("basic");
 
-    isfet.start();
+    kagefumi.start();
   }
 }
 
 declare global {
   interface HTMLElementTagNameMap {
-    "isfet-canvas": IsfetCanvas;
+    "kagefumi-canvas": KagefumiCanvas;
   }
 }

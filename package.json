@@ -1,19 +1,19 @@
 {
-  "name": "isfet",
+  "name": "kagefumi",
   "version": "0.0.1",
   "description": "ISF shader develop environment",
   "private": true,
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/yadex205/isfet.git"
+    "url": "git+https://github.com/yadex205/kagefumi.git"
   },
   "author": "Kanon Kakuno <yadex205@yadex205.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/yadex205/isfet/issues"
+    "url": "https://github.com/yadex205/kagefumi/issues"
   },
-  "homepage": "https://github.com/yadex205/isfet#readme",
+  "homepage": "https://github.com/yadex205/kagefumi#readme",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",

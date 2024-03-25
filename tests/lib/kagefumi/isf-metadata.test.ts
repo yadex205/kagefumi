@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { IsfMetadata } from "../../../src/lib/isfet/isf-metadata";
+import { IsfMetadata } from "../../../src/lib/kagefumi/isf-metadata";
 
 describe("IsfMetadata", () => {
   describe(".parseIsfMetadataJson", () => {
