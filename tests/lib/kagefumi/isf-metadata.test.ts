@@ -151,6 +151,19 @@ describe("IsfMetadata", () => {
       });
     });
 
+    describe("when test-point.fs is given", async () => {
+      const isfSource = await readFile(path.join(import.meta.dirname, "../../vendor/isf-tests-tutorials/test-point.fs"), "utf-8");
+      const isfMetadata = IsfMetadata.parseIsfSource(isfSource)!;
+
+      it("adds inputs", () => {
+        expect(isfMetadata.inputs).toMatchObject([
+          { type: "image", name: "inputImage" },
+          { type: "point2D", name: "location", default: [0.0, 0.0] },
+          { type: "point2D", name: "locationB", default: [0.0, 0.0], min: [0.0, 0.0], max: [1920.0, 1080.0] },
+        ]);
+      });
+    });
+
     describe("when test-color.fs is given", async () => {
       const isfSource = await readFile(path.join(import.meta.dirname, "../../vendor/isf-tests-tutorials/test-color.fs"), "utf-8");
       const isfMetadata = IsfMetadata.parseIsfSource(isfSource)!;
