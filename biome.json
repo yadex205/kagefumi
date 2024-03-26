@@ -1,7 +1,7 @@
 {
   "$schema": "https://biomejs.dev/schemas/1.6.3/schema.json",
   "files": {
-    "include": ["src/**/*.ts", "tests/**/*.ts"]
+    "include": ["**/*.ts"]
   },
   "organizeImports": {
     "enabled": true
