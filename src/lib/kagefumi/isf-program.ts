@@ -18,7 +18,7 @@ uniform float TIME;
 export class IsfProgram extends GlProgram {
   private _isfMetadata = new IsfMetadata();
   private _attributeLocations: { [key: string]: GLint | null } = Object.freeze({});
-  private _uniformLocations: { [key: string]: WebGLUniformLocation | null } =  Object.freeze({});
+  private _uniformLocations: { [key: string]: WebGLUniformLocation | null } = Object.freeze({});
 
   public static createFromIsfSource(gl: WebGLRenderingContext, isfSource: string) {
     const isfProgram = new IsfProgram(gl);
@@ -28,13 +28,18 @@ export class IsfProgram extends GlProgram {
   }
 
   private static buildIsfFragmentShaderSource(isfSource: string, isfMetadata: IsfMetadata) {
-    const additionalUniformLines = isfMetadata.inputs.map(input => {
+    const additionalUniformLines = isfMetadata.inputs.map((input) => {
       switch (input.type) {
-        case "bool": return `uniform bool ${input.name};`;
-        case "long": return `uniform int ${input.name};`;
-        case "float": return `uniform float ${input.name};`;
-        case "color": return `uniform vec4 ${input.name};`;
-        default: "";
+        case "bool":
+          return `uniform bool ${input.name};`;
+        case "long":
+          return `uniform int ${input.name};`;
+        case "float":
+          return `uniform float ${input.name};`;
+        case "color":
+          return `uniform vec4 ${input.name};`;
+        default:
+          ("");
       }
     });
 
@@ -79,7 +84,7 @@ export class IsfProgram extends GlProgram {
       RENDERSIZE: this.getUniformLocation("RENDERSIZE"),
     };
 
-    isfMetadata.inputs.forEach(input => {
+    isfMetadata.inputs.forEach((input) => {
       uniformLocations[input.name] = this.getUniformLocation(input.name);
     });
 

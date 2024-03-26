@@ -37,12 +37,16 @@ export class IsfRenderer {
     gl.enableVertexAttribArray(positionAttributeLocation);
     vertexPositionBuffer.bindToAttributeLocation(positionAttributeLocation);
 
-    isfProgram.isfMetadata.inputs.forEach(input => {
+    isfProgram.isfMetadata.inputs.forEach((input) => {
       switch (input.type) {
-        case "bool": return this._uniformSetFunctionNames[input.name] = "uniform1iv";
-        case "long": return this._uniformSetFunctionNames[input.name] = "uniform1iv";
-        case "float": return this._uniformSetFunctionNames[input.name] = "uniform1fv";
-        case "color": return this._uniformSetFunctionNames[input.name] = "uniform4fv";
+        case "bool":
+          return (this._uniformSetFunctionNames[input.name] = "uniform1iv");
+        case "long":
+          return (this._uniformSetFunctionNames[input.name] = "uniform1iv");
+        case "float":
+          return (this._uniformSetFunctionNames[input.name] = "uniform1fv");
+        case "color":
+          return (this._uniformSetFunctionNames[input.name] = "uniform4fv");
       }
     });
 

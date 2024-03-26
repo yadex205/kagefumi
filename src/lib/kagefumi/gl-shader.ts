@@ -36,9 +36,12 @@ export class GlShader {
     const gl = this._gl;
 
     switch (this._glShaderType) {
-      case gl.VERTEX_SHADER: return "vertex";
-      case gl.FRAGMENT_SHADER: return "fragment";
-      default: return "unknown";
+      case gl.VERTEX_SHADER:
+        return "vertex";
+      case gl.FRAGMENT_SHADER:
+        return "fragment";
+      default:
+        return "unknown";
     }
   }
 

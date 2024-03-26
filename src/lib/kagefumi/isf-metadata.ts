@@ -1,10 +1,7 @@
 import tokenizeGlsl from "glsl-tokenizer/string";
 import * as yup from "yup";
 
-const Vector2Schema = yup.tuple([
-  yup.number().required(),
-  yup.number().required(),
-]);
+const Vector2Schema = yup.tuple([yup.number().required(), yup.number().required()]);
 
 const Vector4Schema = yup.tuple([
   yup.number().required(),
@@ -21,58 +18,82 @@ const IsfMetadataJsonBaseInputSchema = yup.object({
 
 type IsfMetadataJsonEventInput = Omit<yup.InferType<typeof IsfMetadataJsonBaseInputSchema>, "TYPE"> & { TYPE: "event" };
 
-const IsfMetadataJsonBoolInputSchema = IsfMetadataJsonBaseInputSchema.concat(yup.object({
-  DEFAULT: yup.number().optional(),
-}));
+const IsfMetadataJsonBoolInputSchema = IsfMetadataJsonBaseInputSchema.concat(
+  yup.object({
+    DEFAULT: yup.number().optional(),
+  }),
+);
 
 type IsfMetadataJsonBoolInput = Omit<yup.InferType<typeof IsfMetadataJsonBoolInputSchema>, "TYPE"> & { TYPE: "bool" };
 
-const IsfMetadataJsonLongInputSchema = IsfMetadataJsonBaseInputSchema.concat(yup.object({
-  DEFAULT: yup.number().optional(),
-  VALUES: yup.array().of(yup.number().required()).optional(),
-  LABELS: yup.array().of(yup.string().required()).optional(),
-}));
+const IsfMetadataJsonLongInputSchema = IsfMetadataJsonBaseInputSchema.concat(
+  yup.object({
+    DEFAULT: yup.number().optional(),
+    VALUES: yup.array().of(yup.number().required()).optional(),
+    LABELS: yup.array().of(yup.string().required()).optional(),
+  }),
+);
 
 type IsfMetadataJsonLongInput = Omit<yup.InferType<typeof IsfMetadataJsonLongInputSchema>, "TYPE"> & { TYPE: "long" };
 
-const IsfMetadataJsonFloatInputSchema = IsfMetadataJsonBaseInputSchema.concat(yup.object({
-  DEFAULT: yup.number().optional(),
-  MIN: yup.number().optional(),
-  MAX: yup.number().optional(),
-}));
+const IsfMetadataJsonFloatInputSchema = IsfMetadataJsonBaseInputSchema.concat(
+  yup.object({
+    DEFAULT: yup.number().optional(),
+    MIN: yup.number().optional(),
+    MAX: yup.number().optional(),
+  }),
+);
 
-type IsfMetadataJsonFloatInput = Omit<yup.InferType<typeof IsfMetadataJsonFloatInputSchema>, "TYPE"> & { TYPE: "float" };
+type IsfMetadataJsonFloatInput = Omit<yup.InferType<typeof IsfMetadataJsonFloatInputSchema>, "TYPE"> & {
+  TYPE: "float";
+};
 
-const IsfMetadataJsonPoint2dInputSchema = IsfMetadataJsonBaseInputSchema.concat(yup.object({
-  DEFAULT: Vector2Schema.optional(),
-  MIN: Vector2Schema.optional(),
-  MAX: Vector2Schema.optional(),
-}));
+const IsfMetadataJsonPoint2dInputSchema = IsfMetadataJsonBaseInputSchema.concat(
+  yup.object({
+    DEFAULT: Vector2Schema.optional(),
+    MIN: Vector2Schema.optional(),
+    MAX: Vector2Schema.optional(),
+  }),
+);
 
-type IsfMetadataJsonPoint2dInput = Omit<yup.InferType<typeof IsfMetadataJsonPoint2dInputSchema>, "TYPE"> & { TYPE: "point2D" };
+type IsfMetadataJsonPoint2dInput = Omit<yup.InferType<typeof IsfMetadataJsonPoint2dInputSchema>, "TYPE"> & {
+  TYPE: "point2D";
+};
 
-const IsfMetadataJsonColorInputSchema = IsfMetadataJsonBaseInputSchema.concat(yup.object({
-  DEFAULT: Vector4Schema.optional(),
-  MIN: Vector4Schema.optional(),
-  MAX: Vector4Schema.optional(),
-}));
+const IsfMetadataJsonColorInputSchema = IsfMetadataJsonBaseInputSchema.concat(
+  yup.object({
+    DEFAULT: Vector4Schema.optional(),
+    MIN: Vector4Schema.optional(),
+    MAX: Vector4Schema.optional(),
+  }),
+);
 
-type IsfMetadataJsonColorInput = Omit<yup.InferType<typeof IsfMetadataJsonColorInputSchema>, "TYPE"> & { TYPE: "color" };
+type IsfMetadataJsonColorInput = Omit<yup.InferType<typeof IsfMetadataJsonColorInputSchema>, "TYPE"> & {
+  TYPE: "color";
+};
 
 type IsfMetadataJsonImageInput = Omit<yup.InferType<typeof IsfMetadataJsonBaseInputSchema>, "TYPE"> & { TYPE: "image" };
 
-const IsfMetadataJsonInputSchema = yup.lazy(value => {
+const IsfMetadataJsonInputSchema = yup.lazy((value) => {
   switch (value?.TYPE) {
-    case "event": return IsfMetadataJsonBaseInputSchema;
-    case "bool": return IsfMetadataJsonBoolInputSchema;
-    case "long": return IsfMetadataJsonLongInputSchema;
-    case "float": return IsfMetadataJsonFloatInputSchema;
-    case "point2D": return IsfMetadataJsonPoint2dInputSchema;
-    case "color": return IsfMetadataJsonColorInputSchema;
-    case "image": return IsfMetadataJsonBaseInputSchema;
-    default: return IsfMetadataJsonBaseInputSchema;
+    case "event":
+      return IsfMetadataJsonBaseInputSchema;
+    case "bool":
+      return IsfMetadataJsonBoolInputSchema;
+    case "long":
+      return IsfMetadataJsonLongInputSchema;
+    case "float":
+      return IsfMetadataJsonFloatInputSchema;
+    case "point2D":
+      return IsfMetadataJsonPoint2dInputSchema;
+    case "color":
+      return IsfMetadataJsonColorInputSchema;
+    case "image":
+      return IsfMetadataJsonBaseInputSchema;
+    default:
+      return IsfMetadataJsonBaseInputSchema;
   }
-})
+});
 
 const IsfMetadataJsonSchema = yup.object({
   ISFVSN: yup.string().optional(),
@@ -93,7 +114,7 @@ type IsfMetadataJson = Omit<yup.InferType<typeof IsfMetadataJsonSchema>, "INPUTS
     | IsfMetadataJsonColorInput
     | IsfMetadataJsonImageInput
   )[];
-}
+};
 
 interface IsfBaseInput {
   name: string;
@@ -210,62 +231,69 @@ export class IsfMetadata {
     this._credit = isfMetadataJson.CREDIT;
     this._categories = isfMetadataJson.CATEGORIES || [];
 
-    this._inputs = (isfMetadataJson.INPUTS || []).map(rawInput => {
+    this._inputs = (isfMetadataJson.INPUTS || []).map((rawInput) => {
       switch (rawInput.TYPE) {
-        case "event": return {
-          name: rawInput.NAME,
-          label: rawInput.LABEL,
-          type: rawInput.TYPE,
-        }
+        case "event":
+          return {
+            name: rawInput.NAME,
+            label: rawInput.LABEL,
+            type: rawInput.TYPE,
+          };
 
-        case "bool": return {
-          name: rawInput.NAME,
-          label: rawInput.LABEL,
-          type: rawInput.TYPE,
-          default: rawInput.DEFAULT,
-        };
+        case "bool":
+          return {
+            name: rawInput.NAME,
+            label: rawInput.LABEL,
+            type: rawInput.TYPE,
+            default: rawInput.DEFAULT,
+          };
 
-        case "long": return {
-          name: rawInput.NAME,
-          label: rawInput.LABEL,
-          type: rawInput.TYPE,
-          default: rawInput.DEFAULT,
-          values: rawInput.VALUES,
-          labels: rawInput.LABELS,
-        };
+        case "long":
+          return {
+            name: rawInput.NAME,
+            label: rawInput.LABEL,
+            type: rawInput.TYPE,
+            default: rawInput.DEFAULT,
+            values: rawInput.VALUES,
+            labels: rawInput.LABELS,
+          };
 
-        case "float": return {
-          name: rawInput.NAME,
-          label: rawInput.LABEL,
-          type: rawInput.TYPE,
-          default: rawInput.DEFAULT,
-          min: rawInput.MIN,
-          max: rawInput.MAX,
-        };
+        case "float":
+          return {
+            name: rawInput.NAME,
+            label: rawInput.LABEL,
+            type: rawInput.TYPE,
+            default: rawInput.DEFAULT,
+            min: rawInput.MIN,
+            max: rawInput.MAX,
+          };
 
-        case "point2D": return {
-          name: rawInput.NAME,
-          label: rawInput.LABEL,
-          type: rawInput.TYPE,
-          default: rawInput.DEFAULT,
-          min: rawInput.MIN,
-          max: rawInput.MAX,
-        };
+        case "point2D":
+          return {
+            name: rawInput.NAME,
+            label: rawInput.LABEL,
+            type: rawInput.TYPE,
+            default: rawInput.DEFAULT,
+            min: rawInput.MIN,
+            max: rawInput.MAX,
+          };
 
-        case "color": return {
-          name: rawInput.NAME,
-          label: rawInput.LABEL,
-          type: rawInput.TYPE,
-          default: rawInput.DEFAULT,
-          min: rawInput.MIN,
-          max: rawInput.MAX,
-        };
+        case "color":
+          return {
+            name: rawInput.NAME,
+            label: rawInput.LABEL,
+            type: rawInput.TYPE,
+            default: rawInput.DEFAULT,
+            min: rawInput.MIN,
+            max: rawInput.MAX,
+          };
 
-        case "image": return {
-          name: rawInput.NAME,
-          label: rawInput.LABEL,
-          type: rawInput.TYPE,
-        }
+        case "image":
+          return {
+            name: rawInput.NAME,
+            label: rawInput.LABEL,
+            type: rawInput.TYPE,
+          };
       }
     });
   }
