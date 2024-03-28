@@ -84,7 +84,7 @@ export class KagefumiCanvas extends LitElement {
     }
 
     const kagefumi = new Kagefumi(glContext);
-    kagefumi.createIsfProgram("basic", basicIsfSource);
+    kagefumi.setIsfProgram("basic", basicIsfSource);
     kagefumi.useIsfProgram("basic");
     kagefumi.setInputValue("level", [1.0]);
     kagefumi.setInputValue("color", [0.9, 0.5, 0.5, 1.0]);

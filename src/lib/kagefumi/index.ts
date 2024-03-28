@@ -15,12 +15,18 @@ export class Kagefumi {
     this._isfRenderer = isfRenderer;
   }
 
-  public createIsfProgram(name: string, isfSource: string) {
+  public setIsfProgram(name: string, isfSource: string) {
     const gl = this._gl;
 
-    const isfProgram = IsfProgram.createFromIsfSource(gl, isfSource);
+    const oldIsfProgram = this._isfPrograms.get(name);
+    const newIsfProgram = IsfProgram.createFromIsfSource(gl, isfSource);
 
-    this._isfPrograms.set(name, isfProgram);
+    this._isfPrograms.set(name, newIsfProgram);
+
+    if (oldIsfProgram) {
+      this.useIsfProgram(name);
+      oldIsfProgram.destroy({ destroyShaders: true });
+    }
   }
 
   public useIsfProgram(name: string) {

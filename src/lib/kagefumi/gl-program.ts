@@ -3,6 +3,8 @@ import { GlShader } from "./gl-shader";
 export class GlProgram {
   protected _gl: WebGLRenderingContext;
   private _glProgram: WebGLProgram;
+  private _vertexShader?: GlShader;
+  private _fragmentShader?: GlShader;
 
   public constructor(gl: WebGLRenderingContext) {
     const glProgram = gl.createProgram();
@@ -47,6 +49,9 @@ export class GlProgram {
     if (!this.isLinked) {
       throw new Error(`Cannot link WebGL program.\n${this.glProgramInfoLog}`);
     }
+
+    this._vertexShader = vertexShader;
+    this._fragmentShader = fragmentShader;
   }
 
   public use() {
@@ -56,11 +61,18 @@ export class GlProgram {
     gl.useProgram(glProgram);
   }
 
-  public destroy() {
+  public destroy(option?: { destroyShaders?: boolean }) {
     const gl = this._gl;
     const glProgram = this._glProgram;
+    const vertexShader = this._vertexShader;
+    const fragmentShader = this._fragmentShader;
 
     gl.deleteProgram(glProgram);
+
+    if (option?.destroyShaders) {
+      vertexShader?.destroy();
+      fragmentShader?.destroy();
+    }
   }
 
   public getAttributeLocation(attributeName: string) {
