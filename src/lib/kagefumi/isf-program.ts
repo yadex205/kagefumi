@@ -84,9 +84,9 @@ export class IsfProgram extends GlProgram {
       RENDERSIZE: this.getUniformLocation("RENDERSIZE"),
     };
 
-    isfMetadata.inputs.forEach((input) => {
+    for (const input of isfMetadata.inputs) {
       uniformLocations[input.name] = this.getUniformLocation(input.name);
-    });
+    }
 
     this._isfMetadata = isfMetadata;
     this._attributeLocations = Object.freeze(attributeLocations);

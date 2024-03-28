@@ -17,17 +17,14 @@ export class GlShaderInfoLog extends Array<GlShaderInfoLogLine> {
   }
 
   public parse(glShaderInfoLogString: string) {
-    glShaderInfoLogString
-      .trim()
-      .split(/\n/g)
-      .forEach((glShaderInfoLogLineString) => {
-        const match = glShaderInfoLogLineRegex.exec(glShaderInfoLogLineString);
-        const severity = match?.groups?.severity?.toLowerCase() || "unknown";
-        const line = match?.groups?.line !== undefined ? parseInt(match?.groups?.line) : undefined;
-        const message = match?.groups?.message;
+    for (const glShaderInfoLogLineString of glShaderInfoLogString.trim().split(/\n/g)) {
+      const match = glShaderInfoLogLineRegex.exec(glShaderInfoLogLineString);
+      const severity = match?.groups?.severity?.toLowerCase() || "unknown";
+      const line = match?.groups?.line !== undefined ? Number.parseInt(match?.groups?.line) : undefined;
+      const message = match?.groups?.message;
 
-        this.push({ severity, line, message });
-      });
+      this.push({ severity, line, message });
+    }
 
     this._glShaderInfoLogString = glShaderInfoLogString;
   }

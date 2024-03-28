@@ -1,4 +1,4 @@
-import { GlShader } from "./gl-shader";
+import type { GlShader } from "./gl-shader";
 
 export class GlProgram {
   protected _gl: WebGLRenderingContext;

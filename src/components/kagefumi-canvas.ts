@@ -1,6 +1,6 @@
 import { LitElement, css, html } from "lit";
 import { customElement } from "lit/decorators.js";
-import { createRef, ref, Ref } from "lit/directives/ref.js";
+import { createRef, ref, type Ref } from "lit/directives/ref.js";
 
 import { Kagefumi } from "../lib/kagefumi";
 

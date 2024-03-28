@@ -104,8 +104,11 @@ describe("IsfMetadata", () => {
 
   describe(".parseIsfSource", () => {
     describe("when test-event.fs is given", async () => {
-      const isfSource = await readFile(path.join(import.meta.dirname, "../../vendor/isf-tests-tutorials/test-event.fs"), "utf-8");
-      const isfMetadata = IsfMetadata.parseIsfSource(isfSource)!;
+      const isfSource = await readFile(
+        path.join(import.meta.dirname, "../../vendor/isf-tests-tutorials/test-event.fs"),
+        "utf-8",
+      );
+      const isfMetadata = IsfMetadata.parseIsfSource(isfSource);
 
       it("adds inputs", () => {
         expect(isfMetadata.inputs).toMatchObject([
@@ -116,8 +119,11 @@ describe("IsfMetadata", () => {
     });
 
     describe("when test-bool.fs is given", async () => {
-      const isfSource = await readFile(path.join(import.meta.dirname, "../../vendor/isf-tests-tutorials/test-bool.fs"), "utf-8");
-      const isfMetadata = IsfMetadata.parseIsfSource(isfSource)!;
+      const isfSource = await readFile(
+        path.join(import.meta.dirname, "../../vendor/isf-tests-tutorials/test-bool.fs"),
+        "utf-8",
+      );
+      const isfMetadata = IsfMetadata.parseIsfSource(isfSource);
 
       it("adds inputs", () => {
         expect(isfMetadata.inputs).toMatchObject([
@@ -128,20 +134,32 @@ describe("IsfMetadata", () => {
     });
 
     describe("when test-long.fs is given", async () => {
-      const isfSource = await readFile(path.join(import.meta.dirname, "../../vendor/isf-tests-tutorials/test-long.fs"), "utf-8");
-      const isfMetadata = IsfMetadata.parseIsfSource(isfSource)!;
+      const isfSource = await readFile(
+        path.join(import.meta.dirname, "../../vendor/isf-tests-tutorials/test-long.fs"),
+        "utf-8",
+      );
+      const isfMetadata = IsfMetadata.parseIsfSource(isfSource);
 
       it("adds inputs", () => {
         expect(isfMetadata.inputs).toMatchObject([
           { type: "image", name: "inputImage" },
-          { type: "long", name: "longInputIsPopUpButton", values: [0, 1, 2], labels: ["red", "green", "blue"], default: 1 },
+          {
+            type: "long",
+            name: "longInputIsPopUpButton",
+            values: [0, 1, 2],
+            labels: ["red", "green", "blue"],
+            default: 1,
+          },
         ]);
       });
     });
 
     describe("when test-float.fs is given", async () => {
-      const isfSource = await readFile(path.join(import.meta.dirname, "../../vendor/isf-tests-tutorials/test-float.fs"), "utf-8");
-      const isfMetadata = IsfMetadata.parseIsfSource(isfSource)!;
+      const isfSource = await readFile(
+        path.join(import.meta.dirname, "../../vendor/isf-tests-tutorials/test-float.fs"),
+        "utf-8",
+      );
+      const isfMetadata = IsfMetadata.parseIsfSource(isfSource);
 
       it("adds inputs", () => {
         expect(isfMetadata.inputs).toMatchObject([
@@ -152,8 +170,11 @@ describe("IsfMetadata", () => {
     });
 
     describe("when test-point.fs is given", async () => {
-      const isfSource = await readFile(path.join(import.meta.dirname, "../../vendor/isf-tests-tutorials/test-point.fs"), "utf-8");
-      const isfMetadata = IsfMetadata.parseIsfSource(isfSource)!;
+      const isfSource = await readFile(
+        path.join(import.meta.dirname, "../../vendor/isf-tests-tutorials/test-point.fs"),
+        "utf-8",
+      );
+      const isfMetadata = IsfMetadata.parseIsfSource(isfSource);
 
       it("adds inputs", () => {
         expect(isfMetadata.inputs).toMatchObject([
@@ -165,8 +186,11 @@ describe("IsfMetadata", () => {
     });
 
     describe("when test-color.fs is given", async () => {
-      const isfSource = await readFile(path.join(import.meta.dirname, "../../vendor/isf-tests-tutorials/test-color.fs"), "utf-8");
-      const isfMetadata = IsfMetadata.parseIsfSource(isfSource)!;
+      const isfSource = await readFile(
+        path.join(import.meta.dirname, "../../vendor/isf-tests-tutorials/test-color.fs"),
+        "utf-8",
+      );
+      const isfMetadata = IsfMetadata.parseIsfSource(isfSource);
 
       it("adds inputs", () => {
         expect(isfMetadata.inputs).toMatchObject([

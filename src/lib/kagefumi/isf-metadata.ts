@@ -184,12 +184,10 @@ export class IsfMetadata {
     const isfMetadata = new IsfMetadata();
 
     for (const token of tokenizeGlsl(isfSource)) {
-      if (token.type === "whitespace") {
-        continue;
-      } else if (token.type === "block-comment") {
+      if (token.type === "block-comment") {
         const isfMetadataJson = JSON.parse(token.data.replace(/(^\/\*|\*\/$)/g, ""));
         isfMetadata.parseIsfMetadataJson(isfMetadataJson);
-      } else {
+      } else if (token.type !== "whitespace") {
         break;
       }
     }

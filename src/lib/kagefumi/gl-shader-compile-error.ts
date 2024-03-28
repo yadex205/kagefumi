@@ -1,4 +1,4 @@
-import { GlShaderInfoLog } from "./gl-shader-info-log";
+import type { GlShaderInfoLog } from "./gl-shader-info-log";
 
 export class GlShaderCompileError extends Error {
   private _glShaderInfoLog: GlShaderInfoLog;
