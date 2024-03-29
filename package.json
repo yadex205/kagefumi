@@ -5,7 +5,8 @@
   "private": true,
   "type": "module",
   "workspaces": [
-    "packages/kage"
+    "packages/kage",
+    "packages/kagefumi"
   ],
   "repository": {
     "type": "git",
@@ -22,20 +23,15 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "tauri": "tauri",
-    "test": "vitest",
     "lint": "biome lint"
   },
   "dependencies": {
-    "glsl-tokenizer": "^2.1.5",
-    "lit": "^3.1.2",
-    "yup": "^1.4.0"
+    "lit": "^3.1.2"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.6.3",
     "@tauri-apps/cli": "^1.5.11",
-    "@types/node": "^20.11.30",
     "typescript": "^5.2.2",
-    "vite": "^5.2.0",
-    "vitest": "^1.4.0"
+    "vite": "^5.2.0"
   }
 }

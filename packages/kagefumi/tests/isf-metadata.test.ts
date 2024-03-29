@@ -1,7 +1,7 @@
 import { readFile } from "node:fs/promises";
 import * as path from "node:path";
 import { describe, expect, it } from "vitest";
-import { IsfMetadata } from "../../../src/lib/kagefumi/isf-metadata";
+import { IsfMetadata } from "../src/isf-metadata";
 
 describe("IsfMetadata", () => {
   describe(".parseIsfMetadataJson", () => {
@@ -105,7 +105,7 @@ describe("IsfMetadata", () => {
   describe(".parseIsfSource", () => {
     describe("when test-event.fs is given", async () => {
       const isfSource = await readFile(
-        path.join(import.meta.dirname, "../../vendor/isf-tests-tutorials/test-event.fs"),
+        path.join(import.meta.dirname, "../vendor/isf-tests-tutorials/test-event.fs"),
         "utf-8",
       );
       const isfMetadata = IsfMetadata.parseIsfSource(isfSource);
@@ -120,7 +120,7 @@ describe("IsfMetadata", () => {
 
     describe("when test-bool.fs is given", async () => {
       const isfSource = await readFile(
-        path.join(import.meta.dirname, "../../vendor/isf-tests-tutorials/test-bool.fs"),
+        path.join(import.meta.dirname, "../vendor/isf-tests-tutorials/test-bool.fs"),
         "utf-8",
       );
       const isfMetadata = IsfMetadata.parseIsfSource(isfSource);
@@ -135,7 +135,7 @@ describe("IsfMetadata", () => {
 
     describe("when test-long.fs is given", async () => {
       const isfSource = await readFile(
-        path.join(import.meta.dirname, "../../vendor/isf-tests-tutorials/test-long.fs"),
+        path.join(import.meta.dirname, "../vendor/isf-tests-tutorials/test-long.fs"),
         "utf-8",
       );
       const isfMetadata = IsfMetadata.parseIsfSource(isfSource);
@@ -156,7 +156,7 @@ describe("IsfMetadata", () => {
 
     describe("when test-float.fs is given", async () => {
       const isfSource = await readFile(
-        path.join(import.meta.dirname, "../../vendor/isf-tests-tutorials/test-float.fs"),
+        path.join(import.meta.dirname, "../vendor/isf-tests-tutorials/test-float.fs"),
         "utf-8",
       );
       const isfMetadata = IsfMetadata.parseIsfSource(isfSource);
@@ -171,7 +171,7 @@ describe("IsfMetadata", () => {
 
     describe("when test-point.fs is given", async () => {
       const isfSource = await readFile(
-        path.join(import.meta.dirname, "../../vendor/isf-tests-tutorials/test-point.fs"),
+        path.join(import.meta.dirname, "../vendor/isf-tests-tutorials/test-point.fs"),
         "utf-8",
       );
       const isfMetadata = IsfMetadata.parseIsfSource(isfSource);
@@ -187,7 +187,7 @@ describe("IsfMetadata", () => {
 
     describe("when test-color.fs is given", async () => {
       const isfSource = await readFile(
-        path.join(import.meta.dirname, "../../vendor/isf-tests-tutorials/test-color.fs"),
+        path.join(import.meta.dirname, "../vendor/isf-tests-tutorials/test-color.fs"),
         "utf-8",
       );
       const isfMetadata = IsfMetadata.parseIsfSource(isfSource);
