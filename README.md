@@ -1,6 +1,6 @@
 # Kagefumi
 
-ISF shader develop environment.
+ISF viewer app.
 
 # Misc
 

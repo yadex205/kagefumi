@@ -1,7 +1,7 @@
 {
-  "name": "kagefumi",
-  "version": "0.0.1",
-  "description": "ISF shader develop environment",
+  "name": "@kagefumi/viewer",
+  "version": "0.0.0",
+  "description": "ISF viewer app",
   "private": true,
   "type": "module",
   "workspaces": [
