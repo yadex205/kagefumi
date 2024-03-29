@@ -4,8 +4,7 @@ import { IsfRenderer } from "./isf-renderer";
 export class Kagefumi {
   private _gl: WebGLRenderingContext;
   private _isfRenderer: IsfRenderer;
-  private _isfPrograms: Map<string, IsfProgram> = new Map();
-  private _currentIsfProgram?: IsfProgram;
+  private _isfProgram?: IsfProgram;
   private _intervalHandle = 0;
   private _startTimeMs = 0;
 
@@ -17,37 +16,22 @@ export class Kagefumi {
   }
 
   public get isfMetadata() {
-    return this._currentIsfProgram?.isfMetadata;
+    return this._isfProgram?.isfMetadata;
   }
 
-  public setIsfProgram(name: string, isfSource: string) {
+  public setIsfProgram(isfSource: string) {
     const gl = this._gl;
     const isfRenderer = this._isfRenderer;
-    const currentIsfProgram = this._currentIsfProgram;
+    const oldIsfProgram = this._isfProgram;
 
-    const oldIsfProgram = this._isfPrograms.get(name);
     const newIsfProgram = IsfProgram.createFromIsfSource(gl, isfSource);
-
-    this._isfPrograms.set(name, newIsfProgram);
+    isfRenderer.useIsfProgram(newIsfProgram);
 
     if (oldIsfProgram) {
-      if (oldIsfProgram === currentIsfProgram) {
-        isfRenderer.useIsfProgram(newIsfProgram);
-      }
-
       oldIsfProgram.destroy({ destroyShaders: true });
     }
-  }
 
-  public useIsfProgram(name: string) {
-    const isfRenderer = this._isfRenderer;
-    const isfProgram = this._isfPrograms.get(name);
-
-    if (!isfProgram) {
-      return;
-    }
-
-    isfRenderer.useIsfProgram(isfProgram);
+    this._isfProgram = newIsfProgram;
   }
 
   public setInputValue(name: string, value: number[]) {

@@ -53,7 +53,7 @@ void main() {
 }
 `.trim();
 
-@customElement("kagefumi-canvas")
+@customElement("kagefumi-viewer")
 export class KagefumiCanvas extends LitElement {
   private _canvasElRef: Ref<HTMLCanvasElement> = createRef();
 
@@ -84,8 +84,7 @@ export class KagefumiCanvas extends LitElement {
     }
 
     const kagefumi = new Kagefumi(glContext);
-    kagefumi.setIsfProgram("basic", basicIsfSource);
-    kagefumi.useIsfProgram("basic");
+    kagefumi.setIsfProgram(basicIsfSource);
     kagefumi.setInputValue("level", [1.0]);
     kagefumi.setInputValue("color", [0.9, 0.5, 0.5, 1.0]);
     kagefumi.setInputValue("switch1", [1]);
