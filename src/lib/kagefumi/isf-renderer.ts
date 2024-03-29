@@ -1,4 +1,4 @@
-import { GlVertexBuffer } from "./gl-vertex-buffer";
+import { GlVertexBuffer } from "@kagefumi/kage";
 import { IsfProgram } from "./isf-program";
 
 type UniformSetVectorFunctionName =

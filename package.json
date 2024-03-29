@@ -4,6 +4,9 @@
   "description": "ISF shader develop environment",
   "private": true,
   "type": "module",
+  "workspaces": [
+    "packages/kage"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/yadex205/kagefumi.git"

@@ -1,5 +1,4 @@
-import { GlProgram } from "./gl-program";
-import { GlShader } from "./gl-shader";
+import { GlProgram, GlShader } from "@kagefumi/kage";
 import { IsfMetadata } from "./isf-metadata";
 
 const IsfVertexShaderSource = `
