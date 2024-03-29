@@ -3,8 +3,9 @@ import { IsfRenderer } from "./isf-renderer";
 
 export class Kagefumi {
   private _gl: WebGLRenderingContext;
-  private _isfPrograms: Map<string, IsfProgram> = new Map();
   private _isfRenderer: IsfRenderer;
+  private _isfPrograms: Map<string, IsfProgram> = new Map();
+  private _currentIsfProgram?: IsfProgram;
   private _intervalHandle = 0;
   private _startTimeMs = 0;
 
@@ -15,8 +16,14 @@ export class Kagefumi {
     this._isfRenderer = isfRenderer;
   }
 
+  public get isfMetadata() {
+    return this._currentIsfProgram?.isfMetadata;
+  }
+
   public setIsfProgram(name: string, isfSource: string) {
     const gl = this._gl;
+    const isfRenderer = this._isfRenderer;
+    const currentIsfProgram = this._currentIsfProgram;
 
     const oldIsfProgram = this._isfPrograms.get(name);
     const newIsfProgram = IsfProgram.createFromIsfSource(gl, isfSource);
@@ -24,7 +31,10 @@ export class Kagefumi {
     this._isfPrograms.set(name, newIsfProgram);
 
     if (oldIsfProgram) {
-      this.useIsfProgram(name);
+      if (oldIsfProgram === currentIsfProgram) {
+        isfRenderer.useIsfProgram(newIsfProgram);
+      }
+
       oldIsfProgram.destroy({ destroyShaders: true });
     }
   }

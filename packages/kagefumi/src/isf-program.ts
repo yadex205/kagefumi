@@ -15,7 +15,7 @@ uniform float TIME;
 `.trim();
 
 export class IsfProgram extends GlProgram {
-  private _isfMetadata = new IsfMetadata();
+  private _isfMetadata: Readonly<IsfMetadata> = Object.freeze(new IsfMetadata());
   private _attributeLocations: { [key: string]: GLint | null } = Object.freeze({});
   private _uniformLocations: { [key: string]: WebGLUniformLocation | null } = Object.freeze({});
 
@@ -26,7 +26,7 @@ export class IsfProgram extends GlProgram {
     return isfProgram;
   }
 
-  private static buildIsfFragmentShaderSource(isfSource: string, isfMetadata: IsfMetadata) {
+  private static buildIsfFragmentShaderSource(isfSource: string, isfMetadata: Readonly<IsfMetadata>) {
     const additionalUniformLines = isfMetadata.inputs.map((input) => {
       switch (input.type) {
         case "bool":
@@ -59,7 +59,7 @@ export class IsfProgram extends GlProgram {
 
   public loadIsfSource(isfSource: string) {
     const gl = this._gl;
-    const isfMetadata = IsfMetadata.parseIsfSource(isfSource);
+    const isfMetadata = Object.freeze(IsfMetadata.parseIsfSource(isfSource));
     const isfVertexShaderSource = IsfVertexShaderSource;
     const isfFragmentShaderSource = IsfProgram.buildIsfFragmentShaderSource(isfSource, isfMetadata);
 
