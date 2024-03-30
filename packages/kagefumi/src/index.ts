@@ -1,6 +1,8 @@
 import { IsfProgram } from "./isf-program";
 import { IsfRenderer } from "./isf-renderer";
 
+export type { IsfInput } from "./isf-metadata";
+
 export class Kagefumi {
   private _gl: WebGLRenderingContext;
   private _isfRenderer: IsfRenderer;

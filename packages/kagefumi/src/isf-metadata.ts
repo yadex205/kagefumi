@@ -163,7 +163,7 @@ interface IsfImageInput extends IsfBaseInput {
   type: "image";
 }
 
-type IsfInput =
+export type IsfInput =
   | IsfEventInput
   | IsfBoolInput
   | IsfLongInput
