@@ -42,6 +42,6 @@ void main() {
   } else if (switch2 == 1) {
     gl_FragColor = vec4(color.r, color.g * level, color.b, 1.0);
   } else if (switch2 == 2) {
-    gl_FragColor = vec4(color.rg, color.b * level, 1.0);
+    gl_FragColor = vec4(color.rg, color.b * level * mod(TIME, 1.0) * 2.0, 1.0);
   }
 }
