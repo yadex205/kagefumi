@@ -21,6 +21,10 @@ export class Kagefumi {
     return this._isfProgram?.isfMetadata;
   }
 
+  public get isfInputs() {
+    return this.isfMetadata?.inputs || [];
+  }
+
   public setIsfProgram(isfSource: string) {
     const gl = this._gl;
     const isfRenderer = this._isfRenderer;
@@ -34,10 +38,26 @@ export class Kagefumi {
     }
 
     this._isfProgram = newIsfProgram;
+
+    this.resetInputValues();
   }
 
   public setInputValue(name: string, value: number[]) {
     this._isfRenderer.setInputValue(name, value);
+  }
+
+  public resetInputValues() {
+    for (const input of this.isfInputs) {
+      if (input.type === "bool") {
+        this.setInputValue(input.name, [input.default ?? 0]);
+      } else if (input.type === "long") {
+        this.setInputValue(input.name, [input.default ?? 0]);
+      } else if (input.type === "float") {
+        this.setInputValue(input.name, [input.default ?? 0]);
+      } else if (input.type === "color") {
+        this.setInputValue(input.name, input.default ?? [0, 0, 0, 1]);
+      }
+    }
   }
 
   public start() {

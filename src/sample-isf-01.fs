@@ -9,6 +9,7 @@
   "INPUTS": [
     {
       "NAME": "level",
+      "LABEL": "Level",
       "TYPE": "float",
       "DEFAULT": 0.5,
       "MIN": 0.0,
@@ -17,14 +18,15 @@
     {
       "NAME": "switch1",
       "TYPE": "bool",
-      "DEFAULT": 0.0
+      "DEFAULT": 1.0
     },
     {
       "NAME": "switch2",
       "TYPE": "long",
-      "DEFAULT": 0,
+      "DEFAULT": 2,
       "MIN": 0,
-      "MAX": 2
+      "MAX": 2,
+      "LABELS": ["A", "B", "C"]
     },
     {
       "NAME": "color",
