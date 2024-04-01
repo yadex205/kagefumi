@@ -55,11 +55,13 @@ export class KvKnob extends LitElement {
       this.min,
       Math.min(this.max, changeStartValue + (this.max - this.min) * (changeStartCursorPositionY - e.clientY) * 0.005),
     );
+    this.dispatchInputEvent();
   };
 
-  private handleMouseUp = (e: MouseEvent) => {
+  private handleMouseUp = () => {
     document.removeEventListener("mousemove", this.handleMouseMove);
     document.removeEventListener("keydown", this.handleKeyDown);
+    this.dispatchChangeEvent();
   };
 
   private handleKeyDown = (e: KeyboardEvent) => {
@@ -69,7 +71,19 @@ export class KvKnob extends LitElement {
       document.removeEventListener("mouseup", this.handleMouseUp);
 
       this.value = this._changeStartValue;
+      this.dispatchInputEvent();
+      this.dispatchChangeEvent();
     }
+  };
+
+  private dispatchInputEvent = () => {
+    const event = new Event("input");
+    this.dispatchEvent(event);
+  };
+
+  private dispatchChangeEvent = () => {
+    const event = new Event("change");
+    this.dispatchEvent(event);
   };
 }
 
