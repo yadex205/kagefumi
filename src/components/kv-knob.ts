@@ -1,5 +1,5 @@
 import { LitElement, css, html, unsafeCSS } from "lit";
-import { customElement } from "lit/decorators.js";
+import { customElement, property } from "lit/decorators.js";
 
 import kvKnobCss from "./kv-knob.css?inline";
 
@@ -7,9 +7,27 @@ import kvKnobCss from "./kv-knob.css?inline";
 export class KvKnob extends LitElement {
   public static styles = css`${unsafeCSS(kvKnobCss)}`;
 
+  @property({ attribute: "min", type: Number })
+  public min = 0.0;
+
+  @property({ attribute: "max", type: Number })
+  public max = 1.0;
+
+  @property({ attribute: "value", type: Number })
+  public value = 0.5;
+
+  private _changeStartValue = this.value;
+  private _changeStartCursorPositionY = 0;
+
   protected override render() {
+    const progress = (this.value - this.min) / (this.max - this.min);
+
     return html`
-      <div class="container">
+      <div
+        class="container"
+        style=${"--progress: " + progress.toString()}
+        @mousedown=${this.handleMouseDown}
+      >
         <div class="indicator-track"></div>
         <div class="indicator-progress"></div>
         <div class="knob-body"></div>
@@ -17,6 +35,42 @@ export class KvKnob extends LitElement {
       </div>
     `;
   }
+
+  private handleMouseDown = (e: MouseEvent) => {
+    this._changeStartValue = this.value;
+    this._changeStartCursorPositionY = e.clientY;
+
+    document.addEventListener("mousemove", this.handleMouseMove);
+    document.addEventListener("keydown", this.handleKeyDown);
+    document.addEventListener("mouseup", this.handleMouseUp, {
+      once: true,
+    });
+  };
+
+  private handleMouseMove = (e: MouseEvent) => {
+    const changeStartValue = this._changeStartValue;
+    const changeStartCursorPositionY = this._changeStartCursorPositionY;
+
+    this.value = Math.max(
+      this.min,
+      Math.min(this.max, changeStartValue + (this.max - this.min) * (changeStartCursorPositionY - e.clientY) * 0.005),
+    );
+  };
+
+  private handleMouseUp = (e: MouseEvent) => {
+    document.removeEventListener("mousemove", this.handleMouseMove);
+    document.removeEventListener("keydown", this.handleKeyDown);
+  };
+
+  private handleKeyDown = (e: KeyboardEvent) => {
+    if (e.key === "Escape") {
+      document.removeEventListener("mousemove", this.handleMouseMove);
+      document.removeEventListener("keydown", this.handleKeyDown);
+      document.removeEventListener("mouseup", this.handleMouseUp);
+
+      this.value = this._changeStartValue;
+    }
+  };
 }
 
 declare global {

@@ -8,8 +8,8 @@
   --knob-pointer-color: var(--gray-8);
 
   display: block;
-  width: 64px;
-  height: 64px;
+  width: 48px;
+  height: 48px;
 }
 
 .container {
@@ -63,7 +63,7 @@
   width: 86%;
   height: 86%;
   border-radius: 50%;
-  background-image: linear-gradient(to bottom, white, #aaa);
+  background-image: linear-gradient(to bottom, white, #bbb);
 
   &::before {
     content: "";
@@ -74,7 +74,7 @@
     width: 100%;
     height: 100%;
     border-radius: 50%;
-    background-image: radial-gradient(var(--knob-body-color) 65%, transparent 70%);
+    background-image: radial-gradient(var(--knob-body-color) 64%, transparent 70%);
   }
 
   &::after {
