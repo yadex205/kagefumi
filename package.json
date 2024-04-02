@@ -23,7 +23,7 @@
     "build": "run-s build-kage build-kagefumi build-kagefumi-viewer",
     "build-kage": "npm run -w packages/kage build",
     "build-kagefumi": "npm run -w packages/kagefumi build",
-    "build-kagefumi-viewer": "tsc && vite build",
+    "build-kagefumi-viewer": "tsc -p ./tsconfig.prod.json && vite build",
     "preview": "vite preview",
     "tauri": "tauri",
     "lint": "biome lint"

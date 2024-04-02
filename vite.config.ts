@@ -1,3 +1,4 @@
+import path from "node:path";
 import { defineConfig } from "vite";
 
 export default defineConfig({
@@ -21,5 +22,13 @@ export default defineConfig({
     target: process.env.TAURI_PLATFORM === "windows" ? "chrome105" : "safari13",
     minify: !process.env.TAURI_DEBUG ? "esbuild" : false,
     sourcemap: !!process.env.TAURI_DEBUG,
+  },
+
+  resolve: {
+    alias: process.env.TAURI_DEBUG
+      ? {
+          kagefumi: path.join(__dirname, "./packages/kagefumi/src"),
+        }
+      : {},
   },
 });
