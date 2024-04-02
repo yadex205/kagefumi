@@ -1,3 +1,4 @@
+import { mergeConfig } from "vite";
 import { join, dirname } from "path";
 
 /**
@@ -25,6 +26,19 @@ const config = {
   },
   docs: {
     autodocs: "tag",
+  },
+  viteFinal(config) {
+    return mergeConfig(config, {
+      plugins: [
+        {
+          name: "always-full-reload",
+          handleHotUpdate({ server }) {
+            server.hot.send({ type: "full-reload" });
+            return [];
+          },
+        },
+      ],
+    });
   },
 };
 export default config;
