@@ -1,6 +1,8 @@
 import { LitElement, css, html, unsafeCSS } from "lit";
 import { customElement, property } from "lit/decorators.js";
 
+import { isLeftClick } from "./utils";
+
 import kaKnobCss from "./ka-knob.css?inline";
 
 @customElement("ka-knob")
@@ -37,6 +39,10 @@ export class KaKnob extends LitElement {
   }
 
   private handleMouseDown = (e: MouseEvent) => {
+    if (!isLeftClick(e)) {
+      return;
+    }
+
     this._changeStartValue = this.value;
     this._changeStartCursorPositionY = e.clientY;
 
