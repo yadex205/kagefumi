@@ -14,5 +14,21 @@
     "url": "https://github.com/yadex205/kagefumi/issues"
   },
   "homepage": "https://github.com/yadex205/kagefumi#readme",
-  "scripts": {}
+  "scripts": {
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
+  },
+  "devDependencies": {
+    "@chromatic-com/storybook": "^1.2.25",
+    "@storybook/addon-essentials": "^8.0.5",
+    "@storybook/addon-links": "^8.0.5",
+    "@storybook/blocks": "^8.0.5",
+    "@storybook/builder-vite": "^8.0.5",
+    "@storybook/test": "^8.0.5",
+    "@storybook/web-components": "^8.0.5",
+    "@storybook/web-components-vite": "^8.0.5",
+    "lit": "^3.1.2",
+    "storybook": "^8.0.5",
+    "vite": "^5.2.7"
+  }
 }
