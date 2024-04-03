@@ -21,9 +21,10 @@
   "homepage": "https://github.com/yadex205/kagefumi#readme",
   "scripts": {
     "dev": "vite",
-    "build": "run-s build-kage build-kagefumi build-kagefumi-viewer",
+    "build": "run-s build-kage build-kagefumi build-ui build-kagefumi-viewer",
     "build-kage": "npm run -w packages/kage build",
     "build-kagefumi": "npm run -w packages/kagefumi build",
+    "build-ui": "npm run -w packages/ui build",
     "build-kagefumi-viewer": "tsc -p ./tsconfig.prod.json && vite build",
     "preview": "vite preview",
     "tauri": "tauri",
