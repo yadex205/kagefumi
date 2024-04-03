@@ -1,9 +1,12 @@
+@import "open-props/shadow/colors";
 @import "open-props/shadow/sizes";
 
 :host {
   display: block;
-  width: var(--size-12);
-  height: var(--size-12);
+  width: var(--size-11);
+  height: var(--size-11);
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .root {
@@ -14,9 +17,35 @@
 
 .color-wheel {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  display: block;
+  top: calc(var(--size-4) / 2);
+  left: calc(var(--size-4) / 2);
+  width: calc(100% - var(--size-4));
+  height: calc(100% - var(--size-4));
+  margin: 0;
+  padding: 0;
   border-radius: 50%;
+}
+
+.pointer-container {
+  position: absolute;
+  top: calc(var(--size-4) / 2);
+  left: calc(var(--size-4) / 2);
+  width: calc(100% - var(--size-4));
+  height: calc(100% - var(--size-4));
+  transform: rotate(calc(var(--hue) * -1)) translateX(calc(var(--saturate) / 2));
+}
+
+.pointer {
+  position: absolute;
+  box-sizing: border-box;
+  top: calc(50% - var(--size-4) / 2);
+  left: calc(50% - var(--size-4) / 2);
+  width: var(--size-4);
+  height: var(--size-4);
+  border: 2px solid white;
+  outline: 1px solid black;
+  border-radius: 50%;
+  pointer-events: none;
+  background-color: var(--rgb);
 }
