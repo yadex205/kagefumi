@@ -1,7 +1,12 @@
+import { IsfMetadata } from "./isf-metadata";
 import { IsfProgram } from "./isf-program";
 import { IsfRenderer } from "./isf-renderer";
 
-export type { IsfInput } from "./isf-metadata";
+export type { IsfInput, IsfMetadata } from "./isf-metadata";
+
+export const parseIsfMetadata = (isfSource: string) => {
+  return IsfMetadata.parseIsfSource(isfSource);
+};
 
 export class Kagefumi {
   private _gl: WebGLRenderingContext;
