@@ -26,7 +26,7 @@ export class Kagefumi {
     return this.isfMetadata?.inputs || [];
   }
 
-  public setIsfProgram(isfSource: string) {
+  public setIsfProgram = (isfSource: string) => {
     const gl = this._gl;
     const isfRenderer = this._isfRenderer;
     const oldIsfProgram = this._isfProgram;
@@ -41,13 +41,13 @@ export class Kagefumi {
     this._isfProgram = newIsfProgram;
 
     this.resetInputValues();
-  }
+  };
 
-  public setInputValue(name: string, value: number[]) {
+  public setInputValue = (name: string, value: number[]) => {
     this._isfRenderer.setInputValue(name, value);
-  }
+  };
 
-  public resetInputValues() {
+  public resetInputValues = () => {
     for (const input of this.isfInputs) {
       if (input.type === "bool") {
         this.setInputValue(input.name, [input.default ?? 0]);
@@ -59,9 +59,9 @@ export class Kagefumi {
         this.setInputValue(input.name, input.default ?? [0, 0, 0, 1]);
       }
     }
-  }
+  };
 
-  public start() {
+  public start = () => {
     const interval = 1000 / 60;
 
     window.clearInterval(this._intervalHandle);
@@ -69,16 +69,16 @@ export class Kagefumi {
     this._startTimeMs = Date.now();
     this._intervalHandle = window.setInterval(() => {
       window.cancelAnimationFrame(this._animationFrameHandle);
-      this._animationFrameHandle = window.requestAnimationFrame(this.draw.bind(this));
+      this._animationFrameHandle = window.requestAnimationFrame(this.draw);
     }, interval);
-  }
+  };
 
-  public stop() {
+  public stop = () => {
     window.clearInterval(this._intervalHandle);
     window.cancelAnimationFrame(this._animationFrameHandle);
-  }
+  };
 
-  private draw() {
+  private draw = () => {
     const gl = this._gl;
     const isfRenderer = this._isfRenderer;
     const startTimeMs = this._startTimeMs;
@@ -86,5 +86,5 @@ export class Kagefumi {
     const time = (Date.now() - startTimeMs) / 1000;
 
     isfRenderer.draw(time, gl.drawingBufferWidth, gl.drawingBufferHeight);
-  }
+  };
 }
