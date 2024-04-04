@@ -1,3 +1,5 @@
+import "@kagefumi/ui";
+
 import "./components/kagefumi-viewer";
 import type { KagefumiViewer } from "./components/kagefumi-viewer";
 

@@ -1,11 +1,13 @@
-import { LitElement, css, html, unsafeCSS } from "lit";
+import { LitElement, html, unsafeCSS } from "lit";
 import { customElement, state } from "lit/decorators.js";
 import { map } from "lit/directives/map.js";
 import { createRef, ref } from "lit/directives/ref.js";
 
 import Split from "split.js";
 
-import { Kagefumi, IsfInput } from "kagefumi";
+import { parseIsfMetadata, type IsfInput } from "kagefumi";
+import "@kagefumi/ui";
+import type { KaIsfCanvasElement } from "@kagefumi/ui";
 
 import kagefumiViewerCss from "./kagefumi-viewer.css?inline";
 
@@ -15,10 +17,10 @@ export class KagefumiViewer extends LitElement {
   private _mainPanelGroupElRef = createRef<HTMLDivElement>();
   private _renderViewPanelEl = createRef<HTMLDivElement>();
   private _inputsPanelEl = createRef<HTMLDivElement>();
-  private _canvasEl: HTMLCanvasElement;
-  private _kagefumi: Kagefumi;
+  private _isfCanvasEl: KaIsfCanvasElement;
+  private _isfInputs: IsfInput[] = [];
 
-  static styles = css`${unsafeCSS(kagefumiViewerCss)}`;
+  static styles = unsafeCSS(kagefumiViewerCss);
 
   @state()
   private _isfSources: { uuid: string; name: string; isfSource: string }[] = [];
@@ -29,19 +31,10 @@ export class KagefumiViewer extends LitElement {
   private constructor() {
     super();
 
-    const canvasEl = document.createElement("canvas");
-    canvasEl.className = "render-view-panel__canvas";
+    const isfCanvasEl = document.createElement("ka-isf-canvas");
+    isfCanvasEl.className = "render-view-panel__canvas";
 
-    const glContext = canvasEl.getContext("webgl");
-    if (!glContext) {
-      throw new Error("Cannot get WebGL context.");
-    }
-
-    const kagefumi = new Kagefumi(glContext);
-    kagefumi.start();
-
-    this._canvasEl = canvasEl;
-    this._kagefumi = kagefumi;
+    this._isfCanvasEl = isfCanvasEl;
   }
 
   protected render() {
@@ -55,11 +48,11 @@ export class KagefumiViewer extends LitElement {
         </div>
         <div ${ref(this._mainPanelGroupElRef)} class="main-panel-group">
           <div ${ref(this._renderViewPanelEl)} class="render-view-panel">
-            ${this._canvasEl}
+            ${this._isfCanvasEl}
           </div>
           <div ${ref(this._inputsPanelEl)} class="isf-input-slots-panel">
             <ul class="isf-input-slots">
-              ${map(this._kagefumi.isfInputs, this.renderIsfInputSlot.bind(this))}
+              ${map(this._isfInputs, this.renderIsfInputSlot.bind(this))}
             </ul>
           </div>
         </div>
@@ -131,19 +124,19 @@ export class KagefumiViewer extends LitElement {
   }
 
   handleIsfInputChange(e: InputEvent) {
-    const kagefumi = this._kagefumi;
+    const isfCanvasEl = this._isfCanvasEl;
     const inputEl = e.target as HTMLElement;
     const isfInputType = inputEl.dataset.isfInputType;
 
     if (isfInputType === "bool") {
       const { name, checked } = inputEl as HTMLInputElement;
-      kagefumi.setInputValue(name, checked ? [1] : [0]);
+      isfCanvasEl.setInputValue(name, checked ? [1] : [0]);
     } else if (isfInputType === "long") {
       const { name, value } = inputEl as HTMLSelectElement;
-      kagefumi.setInputValue(name, [Number.parseInt(value)]);
+      isfCanvasEl.setInputValue(name, [Number.parseInt(value)]);
     } else if (isfInputType === "float") {
       const { name, valueAsNumber } = inputEl as HTMLInputElement;
-      kagefumi.setInputValue(name, [valueAsNumber]);
+      isfCanvasEl.setInputValue(name, [valueAsNumber]);
     }
   }
 
@@ -157,14 +150,15 @@ export class KagefumiViewer extends LitElement {
   }
 
   protected willUpdate() {
-    const kagefumi = this._kagefumi;
+    const isfCanvasEl = this._isfCanvasEl;
     const isfSources = this._isfSources;
     const activeIsfSourceUuid = this._activeIsfSourceUuid;
 
     for (const { uuid, isfSource } of isfSources) {
       if (uuid === activeIsfSourceUuid) {
         try {
-          kagefumi.setIsfProgram(isfSource);
+          isfCanvasEl.setIsfProgram(isfSource);
+          this._isfInputs = parseIsfMetadata(isfSource).inputs;
         } catch (e) {
           console.error(e);
         } finally {
