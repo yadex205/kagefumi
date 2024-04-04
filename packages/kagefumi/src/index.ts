@@ -43,6 +43,15 @@ export class Kagefumi {
     this.resetInputValues();
   };
 
+  public setRenderSize = (width: number, height: number) => {
+    const gl = this._gl;
+    const canvasEl = gl.canvas;
+
+    canvasEl.width = width;
+    canvasEl.height = height;
+    gl.viewport(0, 0, width, height);
+  };
+
   public setInputValue = (name: string, value: number[]) => {
     this._isfRenderer.setInputValue(name, value);
   };
