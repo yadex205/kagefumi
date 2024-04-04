@@ -25,7 +25,7 @@
   "scripts": {
     "build": "run-s build-bundle build-types",
     "build-bundle": "tsc --noEmit && vite build",
-    "build-types": "tsc --declaration --emitDeclarationOnly --outDIr dist",
+    "build-types": "tsc -p ./tsconfig.prod.json --declaration --emitDeclarationOnly --outDir dist",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
