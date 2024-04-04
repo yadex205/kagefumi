@@ -8,6 +8,7 @@ export class Kagefumi {
   private _isfRenderer: IsfRenderer;
   private _isfProgram?: IsfProgram;
   private _intervalHandle = 0;
+  private _animationFrameHandle = 0;
   private _startTimeMs = 0;
 
   public constructor(gl: WebGLRenderingContext) {
@@ -66,7 +67,15 @@ export class Kagefumi {
     window.clearInterval(this._intervalHandle);
 
     this._startTimeMs = Date.now();
-    this._intervalHandle = window.setInterval(this.draw.bind(this), interval);
+    this._intervalHandle = window.setInterval(() => {
+      window.cancelAnimationFrame(this._animationFrameHandle);
+      this._animationFrameHandle = window.requestAnimationFrame(this.draw.bind(this));
+    }, interval);
+  }
+
+  public stop() {
+    window.clearInterval(this._intervalHandle);
+    window.cancelAnimationFrame(this._animationFrameHandle);
   }
 
   private draw() {
