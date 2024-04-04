@@ -6,7 +6,7 @@ import { Kagefumi } from "kagefumi";
 import kaIsfCanvasCss from "./ka-isf-canvas.css?inline";
 
 @customElement("ka-isf-canvas")
-export class KaIsfCanvas extends LitElement {
+export class KaIsfCanvasElement extends LitElement {
   @property({ type: Number })
   public width = 640;
 
@@ -77,6 +77,6 @@ export class KaIsfCanvas extends LitElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    "ka-isf-canvas": KaIsfCanvas;
+    "ka-isf-canvas": KaIsfCanvasElement;
   }
 }

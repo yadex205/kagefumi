@@ -4,7 +4,7 @@ import { fn } from "@storybook/test";
 import "../src/ka-color-wheel";
 
 const meta: Meta = {
-  title: "Control/ColorWheel",
+  title: "Control/Color Wheel",
   component: "ka-color-wheel",
 };
 

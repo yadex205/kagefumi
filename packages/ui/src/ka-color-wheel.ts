@@ -8,7 +8,7 @@ import { isLeftClick } from "./utils";
 import kaColorWheelCss from "./ka-color-wheel.css?inline";
 
 @customElement("ka-color-wheel")
-export class KaColorWheel extends LitElement {
+export class KaColorWheelElement extends LitElement {
   public static styles = unsafeCSS(kaColorWheelCss);
 
   @property()
@@ -149,6 +149,6 @@ export class KaColorWheel extends LitElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    "ka-color-wheel": KaColorWheel;
+    "ka-color-wheel": KaColorWheelElement;
   }
 }

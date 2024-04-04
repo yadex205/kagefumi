@@ -6,7 +6,7 @@ import { isLeftClick } from "./utils";
 import kaKnobCss from "./ka-knob.css?inline";
 
 @customElement("ka-knob")
-export class KaKnob extends LitElement {
+export class KaKnobElement extends LitElement {
   public static styles = css`${unsafeCSS(kaKnobCss)}`;
 
   @property({ attribute: "min", type: Number })
@@ -95,6 +95,6 @@ export class KaKnob extends LitElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    "ka-knob": KaKnob;
+    "ka-knob": KaKnobElement;
   }
 }
