@@ -9,6 +9,6 @@ import sampleIsf02Source from "./sample-isf-02.fs?raw";
 document.addEventListener("DOMContentLoaded", async () => {
   const kagefumiEl = document.querySelector<KfKagefumiElement>("kf-kagefumi");
 
-  await kagefumiEl?.addIsfSource("sample-isf.fs 1", sampleIsf01Source);
   await kagefumiEl?.addIsfSource("sample-isf.fs 2", sampleIsf02Source);
+  await kagefumiEl?.addIsfSource("sample-isf.fs 1", sampleIsf01Source);
 });
