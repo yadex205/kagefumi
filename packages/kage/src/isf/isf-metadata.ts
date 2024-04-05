@@ -63,8 +63,6 @@ type IsfMetadataJsonPoint2dInput = Omit<yup.InferType<typeof IsfMetadataJsonPoin
 const IsfMetadataJsonColorInputSchema = IsfMetadataJsonBaseInputSchema.concat(
   yup.object({
     DEFAULT: Vector4Schema.optional(),
-    MIN: Vector4Schema.optional(),
-    MAX: Vector4Schema.optional(),
   }),
 );
 
@@ -155,8 +153,6 @@ interface IsfPoint2dInput extends IsfBaseInput {
 interface IsfColorInput extends IsfBaseInput {
   type: "color";
   default?: [number, number, number, number];
-  min?: [number, number, number, number];
-  max?: [number, number, number, number];
 }
 
 interface IsfImageInput extends IsfBaseInput {
@@ -282,8 +278,6 @@ export class IsfMetadata {
             label: rawInput.LABEL,
             type: rawInput.TYPE,
             default: rawInput.DEFAULT,
-            min: rawInput.MIN,
-            max: rawInput.MAX,
           };
 
         case "image":
