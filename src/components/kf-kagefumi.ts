@@ -9,10 +9,10 @@ import { parseIsfMetadata, type IsfInput } from "@kagefumi/kage";
 import "./kf-isf-canvas";
 import type { KfIsfCanvasElement } from "./kf-isf-canvas";
 
-import kagefumiViewerCss from "./kagefumi-viewer.css?inline";
+import kfKagefumiCss from "./kf-kagefumi.css?inline";
 
-@customElement("kagefumi-viewer")
-export class KagefumiViewer extends LitElement {
+@customElement("kf-kagefumi")
+export class KfKagefumiElement extends LitElement {
   private _navigationPanelGroupElRef = createRef<HTMLDivElement>();
   private _mainPanelGroupElRef = createRef<HTMLDivElement>();
   private _renderViewPanelEl = createRef<HTMLDivElement>();
@@ -20,7 +20,7 @@ export class KagefumiViewer extends LitElement {
   private _isfCanvasEl: KfIsfCanvasElement;
   private _isfInputs: IsfInput[] = [];
 
-  static styles = unsafeCSS(kagefumiViewerCss);
+  static styles = unsafeCSS(kfKagefumiCss);
 
   @state()
   private _isfSources: { uuid: string; name: string; isfSource: string }[] = [];
@@ -200,6 +200,6 @@ export class KagefumiViewer extends LitElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    "kagefumi-viewer": KagefumiViewer;
+    "kf-kagefumi": KfKagefumiElement;
   }
 }
