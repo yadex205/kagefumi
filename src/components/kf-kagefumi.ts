@@ -6,7 +6,10 @@ import { createRef, ref } from "lit/directives/ref.js";
 import Split from "split.js";
 
 import { parseIsfMetadata, type IsfInput } from "@kagefumi/kage";
+import { KaKnobElement } from "@kagefumi/ui";
+
 import "./kf-isf-canvas";
+import "./kf-isf-input-slot";
 import type { KfIsfCanvasElement } from "./kf-isf-canvas";
 
 import kfKagefumiCss from "./kf-kagefumi.css?inline";
@@ -37,6 +40,15 @@ export class KfKagefumiElement extends LitElement {
     this._isfCanvasEl = isfCanvasEl;
   }
 
+  public async addIsfSource(name: string, isfSource: string) {
+    const newIsfSourceUuid = crypto.randomUUID();
+
+    this._isfSources = [...this._isfSources, { uuid: newIsfSourceUuid, name, isfSource }];
+    this._activeIsfSourceUuid = newIsfSourceUuid;
+
+    await this.updateComplete;
+  }
+
   protected render() {
     return html`
       <div class="root">
@@ -51,9 +63,9 @@ export class KfKagefumiElement extends LitElement {
             ${this._isfCanvasEl}
           </div>
           <div ${ref(this._inputsPanelEl)} class="isf-input-slots-panel">
-            <ul class="isf-input-slots">
-              ${map(this._isfInputs, this.renderIsfInputSlot.bind(this))}
-            </ul>
+            <div class="isf-input-slots">
+              ${map(this._isfInputs, this.renderIsfInputSlot)}
+            </div>
           </div>
         </div>
       </div>
@@ -71,26 +83,18 @@ export class KfKagefumiElement extends LitElement {
     `;
   }
 
-  private renderIsfInputSlot(isfInput: IsfInput) {
+  private renderIsfInputSlot = (isfInput: IsfInput) => {
     const isfInputSlotHtml = (strings: TemplateStringsArray, ...values: unknown[]) => {
-      const inputChunkInnerHtml = html(strings, ...values);
-
       return html`
-        <li class="isf-input-slot isf-input-slot--${isfInput.type}">
-          <div class="isf-input-slot__label">${isfInput.label || isfInput.name}</div>
-          <div class="isf-input-slot__input-chunk">${inputChunkInnerHtml}</div>
-        </li>
+        <kf-isf-input-slot label=${isfInput.label || isfInput.name}>
+          ${html(strings, ...values)}
+        </kf-isf-input-slot>
       `;
     };
 
     if (isfInput.type === "bool") {
       return isfInputSlotHtml`
-        <input type="checkbox"
-               name=${isfInput.name}
-               data-isf-input-type="bool"
-               ?checked=${isfInput.default !== 0}
-               @change=${this.handleIsfInputChange.bind(this)}
-        />
+        <input type="checkbox" name=${isfInput.name} ?checked=${isfInput.default !== 0} @input=${this.handleBoolInput} />
       `;
     } else if (isfInput.type === "long") {
       const optionsHtml = isfInput.labels?.map(
@@ -101,53 +105,46 @@ export class KfKagefumiElement extends LitElement {
         <select
           name=${isfInput.name}
           data-isf-input-type="long"
-          @change=${this.handleIsfInputChange.bind(this)}
+          @input=${this.handleLongInput}
         >
           ${optionsHtml}
         </select>
       `;
     } else if (isfInput.type === "float") {
       return isfInputSlotHtml`
-        <input type="range"
-               data-isf-input-type="float"
-               name=${isfInput.name}
-               step="0.01"
-               min=${isfInput.min}
-               max=${isfInput.max}
-               value=${isfInput.default}
-               @input=${this.handleIsfInputChange.bind(this)}
-        />
+        <ka-knob name=${isfInput.name} value=${isfInput.default} min=${isfInput.min} max=${isfInput.max} @input=${this.handleFloatInput}></ka-knob>
       `;
     } else {
       return isfInputSlotHtml`unknown`;
     }
-  }
+  };
 
-  handleIsfInputChange(e: InputEvent) {
+  private handleBoolInput = (e: InputEvent) => {
     const isfCanvasEl = this._isfCanvasEl;
-    const inputEl = e.target as HTMLElement;
-    const isfInputType = inputEl.dataset.isfInputType;
+    const { name, checked } = e.target as HTMLInputElement;
 
-    if (isfInputType === "bool") {
-      const { name, checked } = inputEl as HTMLInputElement;
+    if (name) {
       isfCanvasEl.setInputValue(name, checked ? [1] : [0]);
-    } else if (isfInputType === "long") {
-      const { name, value } = inputEl as HTMLSelectElement;
-      isfCanvasEl.setInputValue(name, [Number.parseInt(value)]);
-    } else if (isfInputType === "float") {
-      const { name, valueAsNumber } = inputEl as HTMLInputElement;
-      isfCanvasEl.setInputValue(name, [valueAsNumber]);
     }
-  }
+  };
 
-  public async addIsfSource(name: string, isfSource: string) {
-    const newIsfSourceUuid = crypto.randomUUID();
+  private handleLongInput = (e: InputEvent) => {
+    const isfCanvasEl = this._isfCanvasEl;
+    const { name, value } = e.target as HTMLSelectElement;
 
-    this._isfSources = [...this._isfSources, { uuid: newIsfSourceUuid, name, isfSource }];
-    this._activeIsfSourceUuid = newIsfSourceUuid;
+    if (name) {
+      isfCanvasEl.setInputValue(name, [Number.parseInt(value)]);
+    }
+  };
 
-    await this.updateComplete;
-  }
+  private handleFloatInput = (e: InputEvent) => {
+    const isfCanvasEl = this._isfCanvasEl;
+    const { name, value } = e.target as KaKnobElement;
+
+    if (name) {
+      isfCanvasEl.setInputValue(name, [value]);
+    }
+  };
 
   protected willUpdate() {
     const isfCanvasEl = this._isfCanvasEl;

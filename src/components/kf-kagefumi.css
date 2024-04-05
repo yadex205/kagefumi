@@ -91,33 +91,4 @@
   margin: 0;
   padding: 0;
   gap: var(--size-1);
-  flex-direction: column;
-}
-
-.isf-input-slot {
-  display: flex;
-  padding: var(--size-2) var(--size-4);
-  border-radius: var(--radius-2);
-  gap: var(--size-4);
-  align-items: center;
-  background-color: var(--gray-2);
-
-  .isf-input-slot__label {
-    width: var(--size-12);
-    flex: 0 0 auto;
-    font-size: var(--font-size-1);
-    line-height: var(--font-lineheight-4);
-  }
-
-  .isf-input-slot__input-chunk {
-    display: flex;
-    flex: 0 1 var(--size-12);
-  }
-
-  &.isf-input-slot--float .isf-input-slot__input-chunk {
-    & input[type="range"] {
-      display: block;
-      width: 100%;
-    }
-  }
 }

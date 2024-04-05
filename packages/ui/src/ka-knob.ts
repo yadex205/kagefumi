@@ -9,6 +9,9 @@ import kaKnobCss from "./ka-knob.css?inline";
 export class KaKnobElement extends LitElement {
   public static styles = css`${unsafeCSS(kaKnobCss)}`;
 
+  @property()
+  public name?: string;
+
   @property({ attribute: "min", type: Number })
   public min = 0.0;
 
