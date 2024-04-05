@@ -3,10 +3,11 @@ import { customElement, state } from "lit/decorators.js";
 import { map } from "lit/directives/map.js";
 import { createRef, ref } from "lit/directives/ref.js";
 
+import { rgbaToHex, hexToRgba } from "@uiw/color-convert";
 import Split from "split.js";
 
 import { parseIsfMetadata, type IsfInput } from "@kagefumi/kage";
-import { KaKnobElement } from "@kagefumi/ui";
+import { KaColorWheelElement, KaKnobElement } from "@kagefumi/ui";
 
 import "./kf-isf-canvas";
 import "./kf-isf-input-slot";
@@ -114,6 +115,22 @@ export class KfKagefumiElement extends LitElement {
       return isfInputSlotHtml`
         <ka-knob name=${isfInput.name} value=${isfInput.default} min=${isfInput.min} max=${isfInput.max} @input=${this.handleFloatInput}></ka-knob>
       `;
+    } else if (isfInput.type === "color") {
+      const value = isfInput.default ?? [1.0, 1.0, 1.0, 1.0];
+      const hex = rgbaToHex({
+        r: value[0] * 255,
+        g: value[1] * 255,
+        b: value[2] * 255,
+        a: value[3] * 100,
+      });
+
+      return isfInputSlotHtml`
+        <ka-color-wheel
+          name=${isfInput.name}
+          value=${hex}
+          @input=${this.handleColorInput}
+        ></ka-color-wheel>
+      `;
     } else {
       return isfInputSlotHtml`unknown`;
     }
@@ -143,6 +160,17 @@ export class KfKagefumiElement extends LitElement {
 
     if (name) {
       isfCanvasEl.setInputValue(name, [value]);
+    }
+  };
+
+  private handleColorInput = (e: InputEvent) => {
+    const isfCanvasEl = this._isfCanvasEl;
+    const { name, value } = e.target as KaColorWheelElement;
+
+    if (name) {
+      const rgba = hexToRgba(value);
+      console.log(rgba);
+      isfCanvasEl.setInputValue(name, [rgba.r / 255, rgba.g / 255, rgba.b / 255, rgba.a]);
     }
   };
 

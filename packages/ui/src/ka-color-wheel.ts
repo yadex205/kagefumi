@@ -12,6 +12,9 @@ export class KaColorWheelElement extends LitElement {
   public static styles = unsafeCSS(kaColorWheelCss);
 
   @property()
+  public name?: string;
+
+  @property()
   public value = "#ffffff";
 
   private _colorWheelCanvasEl: HTMLCanvasElement;
