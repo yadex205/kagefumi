@@ -6,7 +6,6 @@
   "type": "module",
   "workspaces": [
     "packages/kage",
-    "packages/kagefumi",
     "packages/ui"
   ],
   "repository": {
