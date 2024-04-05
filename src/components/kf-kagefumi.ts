@@ -54,7 +54,7 @@ export class KfKagefumiElement extends LitElement {
       <div class="root">
         <div ${ref(this._navigationPanelGroupElRef)} class="navigation-panel-group">
           <ul class="tabs">
-            ${map(this._isfSources, this.renderTab.bind(this))}
+            ${map(this._isfSources, this.renderTab)}
           </ul>
           <kagefumi-viewer-tabs class="tabs" />
         </div>
@@ -72,7 +72,7 @@ export class KfKagefumiElement extends LitElement {
     `;
   }
 
-  private renderTab(isfSource: { uuid: string; name: string }) {
+  private renderTab = (isfSource: { uuid: string; name: string }) => {
     return html`
       <li
         class="tab ${this._activeIsfSourceUuid === isfSource.uuid ? "tab--active" : ""}"
@@ -81,7 +81,7 @@ export class KfKagefumiElement extends LitElement {
         <div class="tab__label">${isfSource.name}</div>
       </li>
     `;
-  }
+  };
 
   private renderIsfInputSlot = (isfInput: IsfInput) => {
     const isfInputSlotHtml = (strings: TemplateStringsArray, ...values: unknown[]) => {
