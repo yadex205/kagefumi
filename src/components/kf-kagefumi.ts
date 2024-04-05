@@ -185,7 +185,8 @@ export class KfKagefumiElement extends LitElement {
 
     Split([renderViewPanelEl, inputsPanelEl], {
       direction: "vertical",
-      sizes: [70, 30],
+      sizes: [80, 20],
+      minSize: [0, 160],
       gutter: () => {
         const gutterEl = document.createElement("gutter");
         gutterEl.className = "main-panel-group__gutter";
