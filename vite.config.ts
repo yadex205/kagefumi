@@ -28,6 +28,7 @@ export default defineConfig({
     alias: process.env.TAURI_DEBUG
       ? {
           "@kagefumi/kage": path.join(__dirname, "./packages/kage/src"),
+          "@kagefumi/ui": path.join(__dirname, "./packages/ui/src"),
         }
       : {},
   },

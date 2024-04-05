@@ -4,7 +4,8 @@
     /* Resolver */
     "baseUrl": ".",
     "paths": {
-      "@kagefumi/kage": ["./packages/kage/src"]
+      "@kagefumi/kage": ["./packages/kage/src"],
+      "@kagefumi/ui": ["./packages/ui/src"]
     },
   }
 }
