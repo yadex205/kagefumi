@@ -5,9 +5,9 @@ import { createRef, ref } from "lit/directives/ref.js";
 
 import Split from "split.js";
 
-import { parseIsfMetadata, type IsfInput } from "kagefumi";
-import "@kagefumi/ui";
-import type { KaIsfCanvasElement } from "@kagefumi/ui";
+import { parseIsfMetadata, type IsfInput } from "@kagefumi/kage";
+import "./kf-isf-canvas";
+import type { KfIsfCanvasElement } from "./kf-isf-canvas";
 
 import kagefumiViewerCss from "./kagefumi-viewer.css?inline";
 
@@ -17,7 +17,7 @@ export class KagefumiViewer extends LitElement {
   private _mainPanelGroupElRef = createRef<HTMLDivElement>();
   private _renderViewPanelEl = createRef<HTMLDivElement>();
   private _inputsPanelEl = createRef<HTMLDivElement>();
-  private _isfCanvasEl: KaIsfCanvasElement;
+  private _isfCanvasEl: KfIsfCanvasElement;
   private _isfInputs: IsfInput[] = [];
 
   static styles = unsafeCSS(kagefumiViewerCss);
@@ -31,7 +31,7 @@ export class KagefumiViewer extends LitElement {
   private constructor() {
     super();
 
-    const isfCanvasEl = document.createElement("ka-isf-canvas");
+    const isfCanvasEl = document.createElement("kf-isf-canvas");
     isfCanvasEl.className = "render-view-panel__canvas";
 
     this._isfCanvasEl = isfCanvasEl;

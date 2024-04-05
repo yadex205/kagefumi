@@ -1,22 +1,22 @@
 import { LitElement, html, unsafeCSS } from "lit";
 import { customElement, property } from "lit/decorators.js";
 
-import { Kagefumi } from "kagefumi";
+import { Isf } from "@kagefumi/kage";
 
-import kaIsfCanvasCss from "./ka-isf-canvas.css?inline";
+import kfIsfCanvasCss from "./kf-isf-canvas.css?inline";
 
-@customElement("ka-isf-canvas")
-export class KaIsfCanvasElement extends LitElement {
+@customElement("kf-isf-canvas")
+export class KfIsfCanvasElement extends LitElement {
   @property({ type: Number })
   public width = 640;
 
   @property({ type: Number })
   public height = 360;
 
-  public static styles = unsafeCSS(kaIsfCanvasCss);
+  public static styles = unsafeCSS(kfIsfCanvasCss);
 
   private _canvasEl: HTMLCanvasElement;
-  private _kagefumi: Kagefumi;
+  private _isf: Isf;
 
   private constructor() {
     super();
@@ -29,23 +29,23 @@ export class KaIsfCanvasElement extends LitElement {
       throw new Error("Cannot get WebGL context.");
     }
 
-    const kagefumi = new Kagefumi(glContext);
+    const isf = new Isf(glContext);
 
     this._canvasEl = canvasEl;
-    this._kagefumi = kagefumi;
+    this._isf = isf;
   }
 
   public setIsfProgram = (isfSource: string) => {
-    const kagefumi = this._kagefumi;
+    const isf = this._isf;
 
-    kagefumi.setIsfProgram(isfSource);
-    kagefumi.resetInputValues();
+    isf.setIsfProgram(isfSource);
+    isf.resetInputValues();
   };
 
   public setInputValue = (name: string, value: number[]) => {
-    const kagefumi = this._kagefumi;
+    const isf = this._isf;
 
-    kagefumi.setInputValue(name, value);
+    isf.setInputValue(name, value);
   };
 
   protected override render() {
@@ -57,26 +57,26 @@ export class KaIsfCanvasElement extends LitElement {
   public override connectedCallback() {
     super.connectedCallback();
 
-    const kagefumi = this._kagefumi;
-    kagefumi.start();
+    const isf = this._isf;
+    isf.start();
   }
 
   protected override updated() {
-    const kagefumi = this._kagefumi;
+    const isf = this._isf;
 
-    kagefumi.setRenderSize(this.width, this.height);
+    isf.setRenderSize(this.width, this.height);
   }
 
   public override disconnectedCallback() {
     super.disconnectedCallback();
 
-    const kagefumi = this._kagefumi;
-    kagefumi.stop();
+    const isf = this._isf;
+    isf.stop();
   }
 }
 
 declare global {
   interface HTMLElementTagNameMap {
-    "ka-isf-canvas": KaIsfCanvasElement;
+    "kf-isf-canvas": KfIsfCanvasElement;
   }
 }

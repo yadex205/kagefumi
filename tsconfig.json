@@ -4,7 +4,7 @@
     /* Resolver */
     "baseUrl": ".",
     "paths": {
-      "kagefumi": ["./packages/kagefumi/src"]
+      "@kagefumi/kage": ["./packages/kage/src"]
     },
   }
 }
