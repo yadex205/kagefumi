@@ -29,10 +29,8 @@
     "lint": "biome lint"
   },
   "dependencies": {
-    "@shopify/draggable": "^1.1.3",
     "lit": "^3.1.2",
-    "open-props": "^1.6.21",
-    "split.js": "^1.6.5"
+    "open-props": "^1.6.21"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.6.3",

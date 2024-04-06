@@ -1,10 +1,8 @@
 import { LitElement, html, unsafeCSS } from "lit";
 import { customElement, state } from "lit/decorators.js";
 import { map } from "lit/directives/map.js";
-import { createRef, ref } from "lit/directives/ref.js";
 
 import { rgbaToHex, hexToRgba } from "@uiw/color-convert";
-import Split from "split.js";
 
 import { parseIsfMetadata, type IsfInput } from "@kagefumi/kage";
 import { KaColorWheelElement, KaKnobElement } from "@kagefumi/ui";
@@ -17,20 +15,13 @@ import kfKagefumiCss from "./kf-kagefumi.css?inline";
 
 @customElement("kf-kagefumi")
 export class KfKagefumiElement extends LitElement {
-  private _navigationPanelGroupElRef = createRef<HTMLDivElement>();
-  private _mainPanelGroupElRef = createRef<HTMLDivElement>();
-  private _renderViewPanelEl = createRef<HTMLDivElement>();
-  private _inputsPanelEl = createRef<HTMLDivElement>();
   private _isfCanvasEl: KfIsfCanvasElement;
   private _isfInputs: IsfInput[] = [];
 
   static styles = unsafeCSS(kfKagefumiCss);
 
   @state()
-  private _isfSources: { uuid: string; name: string; isfSource: string }[] = [];
-
-  @state()
-  private _activeIsfSourceUuid?: string;
+  public isfSource = "";
 
   private constructor() {
     super();
@@ -41,48 +32,20 @@ export class KfKagefumiElement extends LitElement {
     this._isfCanvasEl = isfCanvasEl;
   }
 
-  public async addIsfSource(name: string, isfSource: string) {
-    const newIsfSourceUuid = crypto.randomUUID();
-
-    this._isfSources = [...this._isfSources, { uuid: newIsfSourceUuid, name, isfSource }];
-    this._activeIsfSourceUuid = newIsfSourceUuid;
-
-    await this.updateComplete;
-  }
-
   protected render() {
     return html`
       <div class="root">
-        <div ${ref(this._navigationPanelGroupElRef)} class="navigation-panel-group">
-          <ul class="tabs">
-            ${map(this._isfSources, this.renderTab)}
-          </ul>
-          <kagefumi-viewer-tabs class="tabs" />
+        <div class="render-view-panel">
+          ${this._isfCanvasEl}
         </div>
-        <div ${ref(this._mainPanelGroupElRef)} class="main-panel-group">
-          <div ${ref(this._renderViewPanelEl)} class="render-view-panel">
-            ${this._isfCanvasEl}
-          </div>
-          <div ${ref(this._inputsPanelEl)} class="isf-input-slots-panel">
-            <div class="isf-input-slots">
-              ${map(this._isfInputs, this.renderIsfInputSlot)}
-            </div>
+        <div class="isf-input-slots-panel">
+          <div class="isf-input-slots">
+            ${map(this._isfInputs, this.renderIsfInputSlot)}
           </div>
         </div>
       </div>
     `;
   }
-
-  private renderTab = (isfSource: { uuid: string; name: string }) => {
-    return html`
-      <li
-        class="tab ${this._activeIsfSourceUuid === isfSource.uuid ? "tab--active" : ""}"
-        @click=${() => (this._activeIsfSourceUuid = isfSource.uuid)}
-      >
-        <div class="tab__label">${isfSource.name}</div>
-      </li>
-    `;
-  };
 
   private renderIsfInputSlot = (isfInput: IsfInput) => {
     const isfInputSlotHtml = (strings: TemplateStringsArray, ...values: unknown[]) => {
@@ -174,53 +137,16 @@ export class KfKagefumiElement extends LitElement {
     }
   };
 
-  protected willUpdate() {
+  protected override willUpdate() {
     const isfCanvasEl = this._isfCanvasEl;
-    const isfSources = this._isfSources;
-    const activeIsfSourceUuid = this._activeIsfSourceUuid;
+    const isfSource = this.isfSource;
 
-    for (const { uuid, isfSource } of isfSources) {
-      if (uuid === activeIsfSourceUuid) {
-        try {
-          isfCanvasEl.setIsfProgram(isfSource);
-          this._isfInputs = parseIsfMetadata(isfSource).inputs;
-        } catch (e) {
-          console.error(e);
-        } finally {
-          break;
-        }
-      }
+    try {
+      isfCanvasEl.setIsfProgram(isfSource);
+      this._isfInputs = parseIsfMetadata(isfSource).inputs;
+    } catch (e) {
+      console.error(e);
     }
-  }
-
-  protected firstUpdated() {
-    const navigationPanelGroupEl = this._navigationPanelGroupElRef.value;
-    const mainPanelGroupEl = this._mainPanelGroupElRef.value;
-    const renderViewPanelEl = this._renderViewPanelEl.value;
-    const inputsPanelEl = this._inputsPanelEl.value;
-    if (!navigationPanelGroupEl || !mainPanelGroupEl || !renderViewPanelEl || !inputsPanelEl) {
-      throw new Error("HTML is broken!");
-    }
-
-    Split([navigationPanelGroupEl, mainPanelGroupEl], {
-      sizes: [20, 80],
-      gutter: () => {
-        const gutterEl = document.createElement("div");
-        gutterEl.className = "navigation-panel-group-resizer";
-        return gutterEl;
-      },
-    });
-
-    Split([renderViewPanelEl, inputsPanelEl], {
-      direction: "vertical",
-      sizes: [80, 20],
-      minSize: [0, 160],
-      gutter: () => {
-        const gutterEl = document.createElement("gutter");
-        gutterEl.className = "main-panel-group__gutter";
-        return gutterEl;
-      },
-    });
   }
 }
 
