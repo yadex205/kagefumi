@@ -183,6 +183,7 @@ export class IsfMetadata {
       if (token.type === "block-comment") {
         const isfMetadataJson = JSON.parse(token.data.replace(/(^\/\*|\*\/$)/g, ""));
         isfMetadata.parseIsfMetadataJson(isfMetadataJson);
+        break;
       } else if (token.type !== "whitespace") {
         break;
       }
