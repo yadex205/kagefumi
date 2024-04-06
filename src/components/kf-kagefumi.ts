@@ -134,7 +134,6 @@ export class KfKagefumiElement extends LitElement {
 
     if (name) {
       const rgba = hexToRgba(value);
-      console.log(rgba);
       isfCanvasEl.setInputValue(name, [rgba.r / 255, rgba.g / 255, rgba.b / 255, rgba.a]);
     }
   };
