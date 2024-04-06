@@ -1,5 +1,5 @@
 /*{
-  "DESCRIPTION": "Sample ISF program",
+  "DESCRIPTION": "dreamseqs raymarching",
   "CREDIT": "Kanon Kakuno",
   "ISFVSN": "2.0",
   "VSN": "1.0.0",
@@ -9,126 +9,100 @@
   ],
   "INPUTS": [
     {
-      "NAME": "baseColor",
-      "LABEL": "Base Color",
       "TYPE": "color",
-      "DEFAULT": [1.0, 0.0, 0.0, 1.0]
-    },
-    {
-      "NAME": "speed",
-      "LABEL": "Speed",
-      "TYPE": "float",
-      "DEFAULT": 1,
-      "MIN": 0,
-      "MAX": 10
-    },
-    {
-      "NAME": "enableRotate",
-      "LABEL": "Rotate",
-      "TYPE": "bool",
-      "DEFAULT": 1
+      "NAME": "primaryColor",
+      "LABEL": "Primary color",
+      "DEFAULT": [1.0, 1.0, 1.0, 1.0]
     }
   ]
 }*/
 
+/**
+ * Constants
+ */
+
+const float EPSILON = 0.001;
 const float PI = 3.141592;
 
-// @see https://github.com/dmnsgn/glsl-rotate/blob/main/rotation-3d.glsl
-// @see https://wgld.org/d/glsl/g017.html
-vec3 rotate(vec3 position, float angleRadian, vec3 axis) {
-  axis = normalize(axis);
-  float s = sin(angleRadian);
-  float c = cos(angleRadian);
-  float oc = 1.0 - c;
 
-  mat3 rotateMatrix = mat3(
-    oc * axis.x * axis.x + c,           oc * axis.x * axis.y - axis.z * s,  oc * axis.z * axis.x + axis.y * s,
-    oc * axis.x * axis.y + axis.z * s,  oc * axis.y * axis.y + c,           oc * axis.y * axis.z - axis.x * s,
-    oc * axis.z * axis.x - axis.y * s,  oc * axis.y * axis.z + axis.x * s,  oc * axis.z * axis.z + c
-  );
+/**
+ * Utility functions
+ */
 
-  return rotateMatrix * position;
+mat3 genRotateX(float rad) {
+  return mat3(1, 0,         0,
+              0, cos(rad),  sin(rad),
+              0, -sin(rad), cos(rad));
 }
 
-vec3 rotateX(vec3 position, float angle) {
-  return rotate(position, angle, vec3(1.0, 0.0, 0.0));
+mat3 genRotateY(float rad) {
+  return mat3(cos(rad), 0, -sin(rad),
+              0,        1, 0,
+              sin(rad), 0, cos(rad));
 }
 
-vec3 rotateY(vec3 position, float angle) {
-  return rotate(position, angle, vec3(0.0, 1.0, 0.0));
+mat3 genRotateZ(float rad) {
+  return mat3(cos(rad),  sin(rad), 0,
+              -sin(rad), cos(rad), 0,
+              0,         0,        1);
 }
 
-vec3 rotateZ(vec3 position, float angle) {
-  return rotate(position, angle, vec3(0.0, 0.0, 1.0));
+
+/**
+ * Raymarching fundamentals
+ */
+
+vec3 genRay() {
+  vec2 normXYCoord = isf_FragNormCoord * 2.0 - 1.0;
+
+  return normalize(genRotateZ(-normXYCoord.x * PI) * genRotateX(normXYCoord.y * PI * 0.5) * vec3(0.0, 1.0, 0.0));
 }
 
-vec3 rotateXYZ(vec3 position, vec3 angles) {
-  return rotateZ(rotateY(rotateX(position, angles.x), angles.y), angles.z);
+
+/**
+ * SDF
+ */
+
+float sdfSphere(vec3 rayPos) {
+  return length(mod(rayPos, 4.0) - vec3(2.0, 2.0, 2.0)) - 1.0;
 }
 
-vec3 rotateXYZInvert(vec3 position, vec3 angles) {
-  return rotateX(rotateY(rotateZ(position, -angles.z), -angles.y), -angles.x);
+// @see https://www.shadertoy.com/view/lcVGzz
+float sdfGyroid(vec3 rayPos) {
+  return dot(cos(rayPos), sin(rayPos.yzx));
 }
 
-const vec3 lightDirection01 = normalize(vec3(-1.0, -1.0, 0.0));
-const vec3 lightDirection02 = normalize(vec3(1.0, 1.0, 0.0));
 
-float distanceFunc(vec3 position) {
-  // sphere
-  // return length(mod(position, 4.0) - 2.0) - 1.0;
+/**
+ * Scene functions
+ */
 
-  // cube
-  // vec3 q = abs(mod(position, 8.0) - 4.0);
-  // return length(max(q - vec3(0.5, 0.5, 2.0), 0.0)) - 0.1;
-
-  // grid
-  // vec3 q = abs(mod(position, 8.0) - 4.0);
-  // return min(min(length(max(q - vec3(0.5, 0.5, 10.0), 0.0)) - 0.1, length(max(q - vec3(10.0, 0.5, 0.5), 0.0)) - 0.1), length(max(q - vec3(0.5, 10.0, 0.5), 0.0)) - 0.1);
-
-  // grid
-  vec3 q = abs(mod(position, 8.0) - 4.0);
-  return min(length(max(q - vec3(0.5, 0.5, 10.0), 0.0)) - 0.1, length(max(q - vec3(10.0, 0.5, 0.5), 0.0)) - 0.1);
+float sceneSdf(vec3 rayPos) {
+  // return sdfSphere(rayPos);
+  return sdfGyroid(rayPos);
 }
 
-vec3 normalFunc(vec3 position) {
-  float delta = 0.001;
-  return normalize(vec3(
-    distanceFunc(position + vec3(delta, 0.0, 0.0)) - distanceFunc(position - vec3(delta, 0.0, 0.0)),
-    distanceFunc(position + vec3(0.0, delta, 0.0)) - distanceFunc(position - vec3(0.0, delta, 0.0)),
-    distanceFunc(position + vec3(0.0, 0.0, delta)) - distanceFunc(position - vec3(0.0, 0.0, delta))
-  ));
+vec3 sceneNormal(vec3 rayPos) {
+  return normalize(vec3(sceneSdf(vec3(rayPos.x + EPSILON, rayPos.y, rayPos.z)) - sceneSdf(vec3(rayPos.x - EPSILON, rayPos.y, rayPos.z)),
+                        sceneSdf(vec3(rayPos.x, rayPos.y + EPSILON, rayPos.z)) - sceneSdf(vec3(rayPos.x, rayPos.y - EPSILON, rayPos.z)),
+                        sceneSdf(vec3(rayPos.x, rayPos.y, rayPos.z + EPSILON)) - sceneSdf(vec3(rayPos.x, rayPos.y, rayPos.z - EPSILON))));
 }
 
 void main() {
-  vec2 fragmentPosition = (isf_FragNormCoord.xy - vec2(0.5, 0.5)) * 2.0;
+  vec3 ray = genRotateX(-0.4) * genRay() + vec3(sin(TIME) * 0.1 + sin(TIME * 2.0) * 0.1, 0.0, cos(TIME * 0.4) * 0.1 + cos(TIME * 3.0) * 0.1);
+  vec3 camPos = vec3(2.0, TIME * 5.0, 0.0);
 
-  float progress = mod(TIME * speed, 16.0) / 16.0;
-
-  vec3 cameraPosition = vec3(0.0, -3.0 + 32.0 * progress, 0.0);
-
-  vec3 ray = normalize(vec3(
-    cos(PI * (-fragmentPosition.x + 0.5)) * cos(PI * fragmentPosition.y * 0.5),
-    sin(PI * (-fragmentPosition.x + 0.5)) * cos(PI * fragmentPosition.y * 0.5),
-    sin(PI * fragmentPosition.y * 0.5)
-  ));
-
-  if (enableRotate == true) {
-    ray = rotateY(ray, sin(progress * PI * 2.0));
-  }
-
-  float distance = 0.0;
+  vec3 rayPos = camPos;
+  float sdfResult = 1.0;
   float rayLength = 0.0;
-  vec3 rayPosition = cameraPosition;
-
-  for (float i = 1.0; i < 32.0; i++) {
-    distance = distanceFunc(rayPosition);
-    rayLength = rayLength + distance;
-    rayPosition = cameraPosition + ray * rayLength;
+  for (int i = 0; i < 64; i++) {
+    sdfResult = sceneSdf(rayPos);
+    rayPos += sdfResult * ray;
+    rayLength += sdfResult;
   }
 
-  vec3 normalDirection = normalFunc(rayPosition);
-  float brightness = min((50.0 - rayLength) / 50.0, 5.0) * step(rayLength, 50.0) * step(distance, 0.001) * clamp(dot(lightDirection01, normalDirection), 0.1, 1.0);
-  brightness = brightness + min((50.0 - rayLength) / 50.0, 5.0) * step(rayLength, 50.0) * step(distance, 0.001) * clamp(dot(lightDirection02, normalDirection), 0.1, 1.0);
+  vec3 normal = sceneNormal(rayPos);
+  float fragColor = 1 - step(sdfResult, EPSILON) * (1.0 - (rayLength * 0.05)) * clamp(dot(normal, -ray), 0.1, 1.0);
 
-  gl_FragColor = vec4(baseColor.rgb * brightness, baseColor.a);
+  gl_FragColor = primaryColor * vec4(vec3(fragColor), 1.0);
 }
