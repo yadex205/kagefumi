@@ -28,6 +28,8 @@ export class KfKagefumiElement extends LitElement {
 
     const isfCanvasEl = document.createElement("kf-isf-canvas");
     isfCanvasEl.className = "render-view-panel__canvas";
+    isfCanvasEl.width = 1920;
+    isfCanvasEl.height = 1080;
 
     this._isfCanvasEl = isfCanvasEl;
   }
